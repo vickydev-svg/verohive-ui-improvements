@@ -1,0 +1,31 @@
+.alert-dialog-slide-description {
+  font-size: 3rem !important;
+}
+.popup_box {
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+.popup_para {
+  font-size: 1.5rem;
+  color: black;
+}
+
+.popup_button {
+  font-size: 2rem !important;
+  outline: none;
+}
+
+.dialog {
+  transition: all 0.1s;
+  -webkit-transition: all 0.1s;
+  -moz-transition: all 0.1s;
+  -ms-transition: all 0.1s;
+  -o-transition: all 0.1s;
+}
+
+.popup_button:active {
+  outline: none;
+}

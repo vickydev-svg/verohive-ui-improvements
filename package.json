@@ -1,0 +1,83 @@
+{
+  "name": "webrtc",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/core": "^10.0.28",
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.11.3",
+    "@mui/icons-material": "^5.10.6",
+    "@mui/material": "^5.10.7",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1",
+    "aws-sdk": "^2.714.2",
+    "axios": "^0.19.2",
+    "axios-progress-bar": "^1.2.0",
+    "bcrypt": "^5.0.0",
+    "cookie-session": "^1.4.0",
+    "cors": "^2.8.5",
+    "express-fileupload": "^1.1.7-alpha.4",
+    "express-session": "^1.17.1",
+    "express-status-monitor": "^1.3.3",
+    "googleapis": "^60.0.1",
+    "hbs": "^4.1.1",
+    "kurento-browser-extensions": "0.0.2",
+    "kurento-client": "^6.14.0",
+    "kurento-utils": "^6.15.0",
+    "md5": "^2.2.1",
+    "minimist": "^1.2.5",
+    "mysql2": "^2.1.0",
+    "node-sass": "^6.0.0",
+    "node-schedule": "^1.3.2",
+    "nodemailer": "^6.4.10",
+    "open": "^7.0.4",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "react": "^16.10.2",
+    "react-bootstrap": "^1.3.0",
+    "react-dom": "^16.10.2",
+    "react-error-boundary": "^3.1.1",
+    "react-icons": "^4.4.0",
+    "react-linkify": "^1.0.0-alpha",
+    "react-portal-overlay": "^1.0.0",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "^3.4.1",
+    "react-share": "^4.2.1",
+    "react-sidebar": "^3.0.2",
+    "react-simple-timefield": "^3.2.3",
+    "react-toggle": "^4.1.1",
+    "sequelize": "^6.2.3",
+    "shortid": "^2.2.15",
+    "socket.io-client": "^2.3.0",
+    "video-stream-merger": "^3.6.3"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "electron": "^12.0.1",
+    "express": "^4.18.1",
+    "socket.io": "^2.3.0"
+  }
+}

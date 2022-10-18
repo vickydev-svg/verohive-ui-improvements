@@ -1,0 +1,26 @@
+#meetingRoom div {
+    text-align: center;
+}
+
+.videoContainer {
+    float: left;
+}
+
+#meetingRoom:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+
+body{
+	/* font-family: 'Fira Sans', sans-serif; */
+	/* background: url("./imgs/01.jpg") top left no-repeat, */
+				/* url("./imgs/02.png") no-repeat,
+				url("./imgs/03.png") bottom right no-repeat,
+				url("./imgs/04.png") bottom right no-repeat;
+	background-color: #39454d; */
+	/* color:white;
+	background-attachment: fixed;
+} */
+}

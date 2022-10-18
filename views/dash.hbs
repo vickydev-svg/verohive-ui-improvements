@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    {{!-- <link rel="stylesheet" href="../src/index.css"> --}}
+</head>
+<body>
+    <div className="grid-container">
+        <header className="header">
+            <div className="brand">
+                <button onClick={openMenu}>&#9776;</button>
+               <Link to="/">VeroHive</Link>
+               
+            </div>
+            <div className="header-links">
+                <a href="signin.html">Signin</a>
+
+            </div>
+        </header>
+        <aside className="sidebar">
+            <h3>VERO HIVE</h3>
+            <button onClick={closeMenu} className="sidebar-close-btn">X</button>
+            <ul>
+                <li>
+                    <a href="index.html"><b>ABOUT</b></a>
+                </li>
+                <li>
+                    <a href="index.html"><b>SERVICES</b></a>
+                </li>
+                <li>
+                    <a href="index.html"><b>CONTACT</b></a>
+                </li>
+                <li>
+                    <a href="index.html"><b>FAQ</b></a>
+                </li>
+            </ul>
+
+        </aside>
+
+        <main className="main">
+            <div className="content">
+                <Route path="/product"  component={App}/> 
+                {/* <Router path="/cart/:id?" component={CartScreen} /> */}
+                {/* <Route path="/" exact={true} component={Welcome}/> */}
+                     <img src={logo} style={{width:"20%"}}></img>
+                <div className="Hero"><br></br><h5>VeRoHiVe presents</h5>
+                <h1>Create your unique id<br></br>And start secure meeting</h1><br></br>
+                
+                <form action="/product">
+                  <label for ="fname"></label>
+                  <input className="inputText" type="text"  name="frame"  required></input>
+                  <input className="submitButton" type="submit" value="Chat"></input>
+
+                  
+
+
+                </form>
+                <p>
+                  <h4>If you have an invite link please enter that,or create a new one</h4>  
+                </p>
+                 
+                </div>
+                
+               
+            </div>
+        </main>
+        <footer className="footer">All Rights Reseved</footer>
+    </div>
+</body>
+</html>
