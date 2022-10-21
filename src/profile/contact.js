@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -30,7 +29,8 @@ import "./contact.css";
 
 class Contact extends Component {
   state = {
-    input: { email: "" },
+    server_url: process.env.REACT_APP_SERVER_URL,
+    contactPage: true,
     username: "",
     id: "",
     privatekey: "",
@@ -105,7 +105,7 @@ class Contact extends Component {
         });
     };
 
-    fetch("/getuser", {
+    fetch(this.state.server_url + "/getuser", {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -173,7 +173,11 @@ class Contact extends Component {
         : console.error("user not exist");
     }
   };
-
+  handleCloseContactPop = () => {
+    this.setState({
+      contactPage: false,
+    });
+  };
   addEmailHandler = () => {
     const Cemail = this.state.Cemail;
 
@@ -656,6 +660,22 @@ class Contact extends Component {
   // }
 
   render() {
+    const openMenu = () => {
+      document.querySelector(".sidebar").classList.add("open");
+    };
+
+    const closeMenu = () => {
+      document.querySelector(".sidebar").classList.remove("open");
+    };
+
+    const opencontact = () => {
+      document.querySelector(".contactbar").classList.add("open");
+    };
+
+    const closecontact = () => {
+      document.querySelector(".contactbar").classList.remove("open");
+    };
+
     const componentDecorator = (href, text, key) => (
       <a href={href} key={key} target="_blank" rel="noopener noreferrer">
         {text}
@@ -663,11 +683,23 @@ class Contact extends Component {
     );
 
     return (
-      <div>
+      <div className="home-main">
+        <div className="header">
+          {/* <div className="brand">
+            <button onClick={openMenu}>&#9776;</button>
+          </div> */}
+          <img src={logo} className="logo-vero"></img>
+          <h4 style={{ color: "white", marginRight: "45%" }}>V4.1.1</h4>
+        </div>
+        {/*  */}
+        {/*  */}
+
         <Dialog
           className="dialog"
-          open={this.props.show_contact}
-          onClose={this.props.close_contact}
+          open={this.state.contactPage}
+          onClose={() => {
+            this.handleCloseContactPop();
+          }}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
@@ -692,7 +724,10 @@ class Contact extends Component {
                   id="standard-basic"
                   label="Email"
                   variant="standard"
-                  name="email"
+                  name="Cemail"
+                  onChange={(event) => {
+                    this.inputHandler(event);
+                  }}
                   InputProps={{
                     style: {
                       fontSize: 15,
@@ -707,19 +742,110 @@ class Contact extends Component {
                   InputLabelProps={{
                     style: { fontSize: 20, margin: "0 0 0 10px" },
                   }}
-                  onChange={(event) => {
-                    this.inputHandler(event);
-                  }}
+                  // onChange={handleChange}
                 />
 
                 <Button
+                  onClick={() => this.addEmailHandler()}
                   className="contact_button"
                   variant="contained"
                   endIcon={<SendIcon />}
-                  onClick={() => this.addEmailHandler()}
                 >
-                  Contact
+                  Add Contact
                 </Button>
+              </div>
+              <br></br>
+              <hr></hr>
+              <div
+                style={
+                  this.state.Contacts.length
+                    ? { maxHeight: "61%" }
+                    : { display: "flex", justifyContent: "center" }
+                }
+              >
+                {this.state.Contacts.length ? (
+                  this.state.Contacts.map((user) => (
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        maxWidth: "300px",
+                        maxHeight: "50px",
+                        padding: "10px",
+                        margin: "10px",
+                        color: "black",
+                        backgroundColor: "#ffffffd4",
+                      }}
+                    >
+                      {user.profileImage ? (
+                        <img
+                          src={user.profileImage}
+                          style={{
+                            width: "60px",
+                            height: "60px",
+                            marginRight: "15px",
+                            borderRadius: "50px",
+                          }}
+                        />
+                      ) : (
+                        <p
+                          style={{
+                            fontSize: "30px",
+                            width: "60px",
+                            textAlign: "center",
+                            height: "60px",
+                            marginRight: "15px",
+                            borderRadius: "50px",
+                            backgroundColor: "white",
+                            color: this.getRandomColor(user.name).color,
+                            fontWeight: "bold",
+                            textAlignVertical: "center",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          {user.name.charAt(0).toUpperCase()}
+                        </p>
+                      )}
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        {" "}
+                        <li style={{ fontWeight: "bold", fontSize: "16px" }}>
+                          {user.name}
+                        </li>
+                        <li
+                          style={{
+                            fontSize: "16px",
+                            color: "grey",
+                            maxWidth: "200px",
+                          }}
+                        >
+                          {user.veroKey}
+                        </li>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="lds-roller">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
+                )}
+                <br></br>
               </div>
 
               <div className="loader">
@@ -733,12 +859,17 @@ class Contact extends Component {
             <Button
               variant="contained"
               disableElevation
-              onClick={() => this.props.close_contact()}
+              onClick={() => {
+                this.handleCloseContactPop();
+              }}
             >
               CLOSE
             </Button>
           </DialogActions>
         </Dialog>
+        {/*  */}
+        {/*  */}
+        {/*  */}
         {this.state.mailsentalert != "" ? (
           <div
             style={{
@@ -1030,21 +1161,61 @@ class Contact extends Component {
             </span>
           </div>
         ) : null}
-        {/* sidebar */}
-        {/*  */}
-        {/*  */}
-        {/*  */}
-        {/*  */}
-        {/*  */}
 
-        <div
+        <div></div>
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/* <div
           className="contactbar"
           style={{ borderRadius: "15px", opacity: "80%", padding: "5px" }}
-        >
-          <br></br>
-          <br></br>
-          <hr></hr>
-          <div
+        > */}
+        {/* <h4 style={{ textAlign: "center" }}>Contacts</h4> */}
+        {/* <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "5px",
+            }}
+          >
+            <input
+              type="email"
+              placeholder="Email"
+              name="Cemail"
+              onChange={(event) => {
+                this.inputHandler(event);
+              }}
+              style={{ margin: "5px" }}
+            />
+            
+            <button
+              onClick={() => this.addEmailHandler()}
+              style={{
+                backgroundColor: "green",
+                border: "none",
+                color: "white",
+                outline: "none",
+                margin: "5px",
+                padding: "5px",
+                cursor: "pointer",
+              }}
+            >
+              Add Contact{" "}
+            </button>
+          </div> */}
+        <br></br>
+
+        {/* <div></div> */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/* <br></br>
+          <hr></hr> */}
+        {/* <div
             style={
               this.state.Contacts.length
                 ? { maxHeight: "50vh", overflowY: "auto" }
@@ -1134,10 +1305,10 @@ class Contact extends Component {
               </div>
             )}
             <br></br>
-          </div>
-        </div>
-        <div style={{ position: "absolute", top: "50px" }}>
-          <Overlay
+          </div> */}
+        {/* </div> */}
+        {/* <div style={{ position: "absolute", top: "50px" }}> */}
+        {/* <Overlay
             open={this.state.open}
             onClose={() =>
               this.setState({
@@ -1152,7 +1323,7 @@ class Contact extends Component {
               justifycontent: "center",
             }}
           >
-            {/* modal for public profile */}
+       
 
             <div
               style={{
@@ -1184,11 +1355,76 @@ class Contact extends Component {
                   top: "50px",
                   justifyContent: "center",
                 }}
-              ></div>
+              >
+                <Privacypolicy />
+              </div>
             </div>
 
-            {/* complete */}
-          </Overlay>
+            <div className="footer">
+              <img src={copyrightlogo} style={{ width: "20px" }}></img>MegaHoot
+              Technologies, Inc All Rights Reserved
+              <button
+                onClick={() => this.openModal()}
+                style={{
+                  cursor: "pointer",
+                  marginLeft: "20px",
+                  backgroundColor: "#033a5a",
+                  color: "white",
+                  outline: "none",
+                  border: "none",
+                  fontSize: "1.6rem",
+                }}
+              >
+                Privacy Policy
+              </button>
+              <button
+                onClick={() => this.TermsCondition()}
+                style={{
+                  cursor: "pointer",
+                  backgroundColor: "#033a5a",
+                  color: "white",
+                  outline: "none",
+                  border: "none",
+                  fontSize: "1.6rem",
+                }}
+              >
+                Terms & Conditions
+              </button>{" "}
+            </div>
+
+           
+          </Overlay> */}
+        {/* </div> */}
+        <div className="footer">
+          <img src={copyrightlogo} style={{ width: "20px" }}></img> MegaHoot
+          Technologies, Inc All Rights Reserved
+          <button
+            onClick={() => this.openModal()}
+            style={{
+              cursor: "pointer",
+              marginLeft: "20px",
+              backgroundColor: "#033a5a",
+              color: "white",
+              outline: "none",
+              border: "none",
+              fontSize: "1.6rem",
+            }}
+          >
+            Privacy Policy
+          </button>
+          <button
+            onClick={() => this.TermsCondition()}
+            style={{
+              cursor: "pointer",
+              backgroundColor: "#033a5a",
+              color: "white",
+              outline: "none",
+              border: "none",
+              fontSize: "1.6rem",
+            }}
+          >
+            Terms & Conditions
+          </button>{" "}
         </div>
       </div>
     );

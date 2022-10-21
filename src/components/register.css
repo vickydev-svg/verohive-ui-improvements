@@ -161,10 +161,21 @@ label {
   -ms-transform: scale(1);
   -o-transform: scale(1);
 }
+.marginal {
+  text-align: right;
+  width: 100%;
+  margin-left: 100px;
+  margin-top: 10px;
+  font-size: 1rem;
+  color: white;
+}
 
 @media only screen and (max-width: 600px) {
   .main_wrapper {
     height: 100vh;
+  }
+  .marginal {
+    margin-left: 18px;
   }
   .signup_wrapper {
     width: 80%;

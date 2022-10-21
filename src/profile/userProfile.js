@@ -156,89 +156,6 @@ class UserProfile extends Component {
     });
   };
 
-  // handleCheck = () => {
-  //   console.log("checked")
-  //   this.setState({ checked: !this.state.checked });
-  //   if (this.state.checked == false) {
-  //     alert("You need to verify before using VEROHive")
-  //     const enteredemail = prompt("Enter email address of your parent")
-  //     var rand, mailOptions, host, link;
-  //     var rand1 = Math.floor((Math.random() * 100) + 54);
-  //     var rand2 = Math.floor((Math.random() * 100) + 54);
-  //     var rand3 = Math.floor((Math.random() * 100) + 54);
-  //     rand = rand1.toString() + rand2.toString();
-
-  //     this.setState({
-  //       code: rand
-  //     })
-
-  //     fetch("/nodemailer", {
-  //       method: "post",
-  //       headers: {
-  //         "Content-Type": "application/json"
-  //       },
-  //       body: JSON.stringify({
-  //         To: enteredemail,
-  //         subject: "Please verify email",
-  //         text: "Your Verification Code is" + rand,
-  //         html: `<img src="./verohivelogo.png" style="width: 30%;">
-  //         <h1 style="color: #5b5b5b;">Welcome to VEROHive</h1>
-  //         <h3 style="color: #757575;">Please verify your email address by using the OTP below</h3>
-  //        <p>${rand}</p>
-  //         <h4 style="color: #757575;">After verification, you will be able to start using VEROHive</h4><br><br>
-
-  //         <h4 style="color: #757575;">Cheers!</h4>
-  //         <h4 style="color: #757575;">VEROHive Team</h4>"
-  //         `
-
-  //       })
-  //     })
-
-  //       .then(() => {
-
-  //         console.log("ddd")
-  //         this.verify()
-  //       })
-  //       .catch(err => console.log(err))
-  //   }
-  // }
-  // handleCheck1 = () => {
-  //   console.log("checked")
-  //   this.setState({ checked1: !this.state.checked1 });
-
-  // }
-
-  // verify = () => {
-  //   const { firstName, lastName, username, password, email, age } = this.state;
-  //   const enteredcode = prompt("Enter Verification code")
-  //   if (enteredcode == this.state.code) {
-  //     alert("Successfully Verified")
-  //     fetch("/signup", {
-  //       method: "post",
-  //       headers: {
-  //         "Content-Type": "application/json"
-  //       },
-  //       body: JSON.stringify({
-  //         firstName,
-  //         lastName,
-  //         username,
-  //         password,
-  //         email,
-  //         age
-  //       })
-  //     })
-  //       .then(() => {
-  //         this.props.history.push('/login')
-  //       })
-  //       .catch(err => console.log(err))
-  //   }
-  //   else {
-  //     alert("Invalid code")
-  //     this.setState({
-  //       verified: false
-  //     })
-  //   }
-  // }
   async onSubmit(e) {
     e.preventDefault();
     const {
@@ -360,31 +277,7 @@ class UserProfile extends Component {
     var rand3 = Math.floor(Math.random() * 100 + 54);
 
     rand = rand1.toString() + rand2.toString() + rand3.toString();
-    // rand = Math.random().toString(36).substring(9);
 
-    // if (this.state.room_name == '') {
-    //   this.props.flashHandler('error', "You didn't enter a room name!");
-    //   return;
-    // }
-    // var rand, mailOptions, host, link;
-    // var rand1 = Math.floor((Math.random() * 100) + 54);
-    // var rand2 = Math.floor((Math.random() * 100) + 54);
-    // var rand3 = Math.floor((Math.random() * 100) + 54);
-    // rand = rand1.toString() + rand2.toString() + rand3.toString();
-    // let userData = JSON.parse(localStorage.getItem('userData'));
-    // let userID = userData.id;
-
-    // API.post('/rooms/create', {
-    //   name: this.state.room_name,
-    //   creatorId: userID
-    // }).then((res) => {
-    //   console.log(res.data.data.roomCode);
-    //   this.setState({
-    //     type: 'host',
-    //     room_code: res.data.data.roomCode
-    //   });
-    //Should get room code here and set its state
-    // this.props.flashHandler('success', 'Room Joined!');
     this.props.history
       .push({
         pathname: "/videochat",
@@ -480,9 +373,7 @@ class UserProfile extends Component {
           </div>
 
           <img src={logo} className="logo-vero"></img>
-          <h4 style={{ color: "white", marginRight: "47%" }}>
-          V4.1.1
-          </h4>
+          <h4 style={{ color: "white", marginRight: "47%" }}>V4.1.1</h4>
         </div>
         {this.state.fillallrequiredalert != "" ? (
           <div
@@ -742,19 +633,6 @@ class UserProfile extends Component {
               this.onSubmit(e);
             }}
           >
-            {/* <div className="name">
-          <h4>
-             First Name: <span style={{ color: "red" }}>*</span>
-            </h4>
-            <input 
-              type="text"
-              name="firstName"
-              placeholder="First Name"
-              ref="firstName"
-              onChange={this.onChange}
-            />
-          </div> */}
-
             <div
               style={{ backgroundColor: "whitesmoke", borderRadius: "10px" }}
             >
@@ -1187,7 +1065,8 @@ class UserProfile extends Component {
             </div>
 
             <div className="footer">
-              <img src={copyrightlogo} style={{ width: "20px" }}></img>MegaHoot Technologies, Inc All Rights Reserved
+              <img src={copyrightlogo} style={{ width: "20px" }}></img>MegaHoot
+              Technologies, Inc All Rights Reserved
               <button
                 onClick={() => this.openModal()}
                 style={{
@@ -1221,7 +1100,8 @@ class UserProfile extends Component {
           </Overlay>
         </div>
         <div className="footer">
-          <img src={copyrightlogo} style={{ width: "20px" }}></img> MegaHoot Technologies, Inc All Rights Reserved
+          <img src={copyrightlogo} style={{ width: "20px" }}></img> MegaHoot
+          Technologies, Inc All Rights Reserved
           <button
             onClick={() => this.openModal()}
             style={{

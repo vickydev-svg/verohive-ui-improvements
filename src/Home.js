@@ -87,20 +87,35 @@ class Home extends Component {
   videoEle = React.createRef();
   selectEle = React.createRef();
   state = {
+    server_url: process.env.REACT_APP_SERVER_URL,
     updateProfile: false,
     open: false,
     contactPop: false,
-    username: "",
+    input: { email: "" },
     id: "",
     privatekey: "",
-    firstname: "",
-    lastname: "",
+    firstName: "",
+    lastName: "",
+    username: "",
+    password: "",
+    confirmPassword: "",
     email: "",
     organization: "",
+    links: "",
     bio: "",
     city: "",
     country: "",
-    links: "",
+    Facebook: "",
+    FacebookLive: "",
+    Twitter: "",
+    Youtube: "",
+    YoutubeLive: "",
+    Instagram: "",
+    LinkedIn: "",
+    Weblink1: "",
+    Weblink2: "",
+    age: "",
+    code: "",
     key: "",
     baconIsReady: false,
     followuser: [],
@@ -135,7 +150,25 @@ class Home extends Component {
     youtubeLive: "",
     otherWebsite1: "",
     otherWebsite2: "",
+    fillallrequiredalert: "",
+    profileupdatealert: "",
     meetingTime: false,
+    meetingtitle: "",
+    meetingdescription: "",
+    meetingDate: "",
+    meetingMonth: "",
+    meetingYear: "",
+    meetingHrs: "",
+    meetingMin: "",
+    meetingSec: "",
+    youcannorfollowu: "",
+    alreadysentreq: "",
+    VEROrequestsentalert: "",
+    Contacts: [],
+    SCname: "",
+    SCveroKey: "",
+    Cemail: "",
+    mailsentalert: "",
   };
 
   componentDidMount() {
@@ -203,7 +236,7 @@ class Home extends Component {
       id: this.props.location.state.username,
     });
 
-    fetch("http://localhost:65000/getuser", {
+    fetch(this.state.server_url + "/getuser", {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -216,6 +249,7 @@ class Home extends Component {
       .then((res) => {
         console.log("ff", res);
         this.setState({
+          username: res.username,
           privatekey: res.privateKey,
           firstname: res.firstName,
           lastname: res.lastName,
@@ -226,8 +260,16 @@ class Home extends Component {
           city: res.city,
           country: res.country,
           links: res.links,
-          image1: res.ProfilePic,
+          Facebook: res.Facebook,
+          FacebookLive: res.FacebookLive,
           Twitter: res.Twitter,
+          LinkedIn: res.LinkedIn,
+          Youtube: res.Youtube,
+          YoutubeLive: res.YoutubeLive,
+          Instagram: res.Instagram,
+          Weblink1: res.Weblink1,
+          Weblink2: res.weblink2,
+          image1: res.ProfilePic,
           roompin: res.roompin,
         });
         const emailforStatus = res.email;
@@ -388,7 +430,7 @@ class Home extends Component {
     const shareemail = this.state.invitenewuser;
     // const userown = this.state.username
     // navigator.clipboard.writeText(this.props.location.state.room_code);
-    fetch("/getuser", {
+    fetch(this.state.server_url + "/getuser", {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -550,7 +592,192 @@ class Home extends Component {
       [e.target.name]: e.target.value,
     });
   };
+  inputHandler = (event) => {
+    let field = event.target.name;
+    let value = event.target.value;
+    this.setState({
+      [field]: value,
+    });
+  };
+  viewfollow = () => {
+    const { email, privatekey, key } = this.state;
+    fetch("/follow/followrequests", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        privatekey,
+      }),
+    })
+      .then((response) => response.json())
+      .then((res) => {
+        console.log("Dd", res);
+        this.setState({ followuser: res });
+      })
+      .catch((err) => console.log(err));
+  };
+  acceptrequest = (email) => {
+    const { firstname, lastname } = this.state;
+    const fullnameaccepted = firstname + lastname;
+    const emailaccepted = this.state.email;
+    fetch("/follow/acceptrequests", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        emailaccepted,
+        fullnameaccepted,
+      }),
+    })
+      .then((res) => {
+        console.log("Dd", res);
+        alert("connected successfully");
+        this.viewfollow();
+        this.viewfollowing();
+      })
+      .catch((err) => console.log(err));
+  };
+  follow = () => {
+    const { email, privatekey, key, firstname, lastname } = this.state;
+    var fullname = firstname + lastname;
+    if (key == privatekey) {
+      alert("You can't follow yourself");
+    } else {
+      fetch("/follow", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          privatekey,
+          fullname,
+          key,
+        }),
+      })
+        .then((res) => {
+          console.log("rohan", res);
+          if (res.status == 401) {
+            alert("already connected");
+          } else {
+            alert("Follow request sent successfully");
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+  viewfollowing = () => {
+    this.setState({ following: [] });
+    const privatekey = this.state.privatekey;
+    fetch("/follow/following", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        privatekey,
+      }),
+    })
+      .then((response) => response.json())
+      .then((res) => {
+        console.log("Dd", res);
+        this.setState({ following: res });
+      })
+      .catch((err) => console.log(err));
+    fetch("/follow/followinga", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        privatekey,
+      }),
+    })
+      .then((response) => response.json())
+      .then((res) => {
+        console.log("Dd", res);
+        if (this.state.following.length == undefined) {
+          this.setState({ following: res });
+        } else {
+          console.log("here");
+          for (var i = 0; i < res.length; i++) {
+            this.state.following.push(res[i]);
+          }
 
+          this.setState({ following: this.state.following });
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
+  async onSubmit(e) {
+    e.preventDefault();
+    const {
+      firstname,
+      lastname,
+      username,
+      password,
+      confirmpassword,
+      bio,
+      Facebook,
+      FacebookLive,
+      Youtube,
+      YoutubeLive,
+      Instagram,
+      LinkedIn,
+      Twitter,
+      Weblink1,
+      Weblink2,
+      city,
+      country,
+      links,
+      organization,
+      email,
+      age,
+      checked,
+      checked1,
+    } = this.state;
+    console.log("everything is sumitted");
+    var rand1 = Math.floor(Math.random() * 100 + 54);
+    var rand2 = Math.floor(Math.random() * 100 + 54);
+    var rand = rand1.toString() + rand2.toString();
+
+    await fetch(this.state.server_url + "/updateprofile", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        organization,
+        links,
+        bio,
+        city,
+        country,
+        username,
+        firstname,
+        lastname,
+        Facebook,
+        FacebookLive,
+        Twitter,
+        LinkedIn,
+        Youtube,
+        YoutubeLive,
+        Instagram,
+        Weblink1,
+        Weblink2,
+
+        email,
+      }),
+    })
+      .then(() => {
+        this.setState({ profileupdatealert: "Profile successfully updated" });
+        // alert("Profile successfully updated")
+      })
+      .catch((err) => console.log(err));
+  }
   infohostjoin = () => {
     this.setState({
       infoboxcontainer: "showme",
@@ -594,13 +821,6 @@ class Home extends Component {
       // alert("Enter the room id");
     }
 
-    // API.get('/rooms/join/'+this.state.room_code, {
-
-    // }).then((res) => {
-    // 	console.log("dd",res)
-    // 	// this.props.flashHandler('success', 'Room Joined!');
-    // 	this.setState({ room_name: res.data.data.room_name, type: 'client' })
-
     this.props.history.push({
       pathname: "/waitingRoom",
       search:
@@ -618,9 +838,6 @@ class Home extends Component {
         camMode: this.state.camMode,
       },
     });
-    // }).catch((error) => {
-    // 	this.props.flashHandler('error', 'Room is full!');
-    // });
   };
 
   joinhostnow = () => {
@@ -986,6 +1203,68 @@ class Home extends Component {
 
     return (
       <>
+        {/* profile update alert */}
+        {this.state.profileupdatealert != "" ? (
+          <div
+            style={{
+              zIndex: "10000000",
+              backgroundColor: "white",
+              padding: "10px",
+              color: "grey",
+              fontSize: "2.4rem",
+              position: "absolute",
+              top: "36%",
+              left: "23%",
+              width: "272px",
+              height: "158px",
+              backgroundColor: "#033a5a",
+              border: "1px solid #2e2e4c",
+              textAlign: "center",
+              boxShadow:
+                "3px 9px 16px rgba(152, .149, .149, 0.4) ,-3px -3px 10px rgba(255, .255, .255, 0.06),inset 14px 14px 26px rgb(0, .0, .0, 0.3),inset -3px -3px 15px rgba(206, .196, .196, 0.05)",
+              borderRadius: "10px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
+          >
+            <br></br>
+            <br></br>{" "}
+            <span style={{ marginTop: "11px" }}>
+              {" "}
+              {this.state.profileupdatealert}
+              <br></br>
+            </span>
+            <span>
+              <button
+                style={{
+                  backgroundColor: "#4FADD3",
+
+                  color: "white",
+                  border: "none",
+                  width: "100px",
+                  padding: "1rem",
+                  marginTop: "20px",
+                  borderRadius: "10px",
+                  cursor: "pointer",
+                  boxShadow:
+                    "3px 9px 16px rgb(0 0 0 / 40%), -3px -3px 10px rgb(255 255 255 / 6%), inset 14px 14px 26px rgb(0 0 0 / 30%), inset -3px -3px 15px rgb(255 255 255 / 5%)",
+                  borderWwidth: "1px 0px 0px 1px",
+                  borderStyle: "solid",
+                  borderColor: "rgba(255, 255, 255, 0.2)",
+                }}
+                onClick={() =>
+                  this.setState({
+                    profileupdatealert: "",
+                  })
+                }
+              >
+                OK
+              </button>
+            </span>
+          </div>
+        ) : null}
         {/* MEETING SCHEDULE POPUP */}
         <Dialog
           className="metting_dialog dialog"
@@ -1203,6 +1482,9 @@ class Home extends Component {
                   width: "100%",
                   height: "90%",
                 }}
+                onSubmit={(e) => {
+                  this.onSubmit(e);
+                }}
               >
                 <div
                   className="update_form_left_part"
@@ -1237,7 +1519,12 @@ class Home extends Component {
                       <TextField
                         id="standard-read-only-input"
                         label="First Name"
-                        defaultValue="Vicky"
+                        disabled={true}
+                        // defaultValue="Vicky"
+                        ref="firstName"
+                        value={this.state.firstname}
+                        name="firstName"
+                        onChange={this.onChange}
                         InputProps={{
                           readOnly: true,
                           style: {
@@ -1258,8 +1545,13 @@ class Home extends Component {
 
                       <TextField
                         id="standard-read-only-input"
-                        label="Last Name"
-                        defaultValue="Kumar"
+                        label="Username"
+                        // defaultValue="Kumar"
+                        name="username"
+                        value={this.state.username}
+                        disabled={true}
+                        ref="username"
+                        onChange={this.onChange}
                         InputProps={{
                           readOnly: true,
                           style: {
@@ -1284,6 +1576,9 @@ class Home extends Component {
                         label="City"
                         variant="standard"
                         name="city"
+                        value={this.state.city}
+                        ref="city"
+                        onChange={this.onChange}
                         // onChange={handleChange}
                         InputProps={{
                           style: {
@@ -1306,6 +1601,9 @@ class Home extends Component {
                         label="Country"
                         variant="standard"
                         name="country"
+                        value={this.state.country}
+                        ref="country"
+                        onChange={this.onChange}
                         // onChange={handleChange}
                         InputProps={{
                           style: {
@@ -1321,13 +1619,17 @@ class Home extends Component {
                         InputLabelProps={{
                           style: { fontSize: 15, marginLeft: "0px" },
                         }}
+                        required
                       />
 
                       <TextField
                         id="standard-basic"
                         label="Organisation"
                         variant="standard"
-                        name="organisation"
+                        name="organization"
+                        value={this.state.organization}
+                        ref="organization"
+                        onChange={this.onChange}
                         // onChange={handleChange}
                         InputProps={{
                           style: {
@@ -1350,10 +1652,14 @@ class Home extends Component {
 
                 <div className="update_form_right_part ">
                   <div className="two_inputs" style={{ width: "100%" }}>
-                    <TextField
-                      id="standard-read-only-input"
-                      label="First Name"
-                      defaultValue="Vicky"
+                    {/* <TextField
+                      id="standard-basic"
+                      label="firstName"
+                      name="firstName"
+                      value={this.state.firstName}
+                      ref="firstName"
+                      onChange={this.onChange}
+                      // defaultValue="Vicky"
                       InputProps={{
                         readOnly: true,
                         style: {
@@ -1370,12 +1676,16 @@ class Home extends Component {
                       InputLabelProps={{
                         style: { fontSize: 20, margin: "0px 0px 0px 10px" },
                       }}
-                    />
+                    /> */}
 
                     <TextField
                       id="standard-read-only-input"
                       label="Email"
-                      defaultValue="vickydevsvg@gmail.com"
+                      name="email"
+                      value={this.state.email}
+                      ref="email"
+                      onChange={this.onChange}
+                      disabled={true}
                       InputProps={{
                         readOnly: true,
                         style: {
@@ -1405,7 +1715,10 @@ class Home extends Component {
                       label="LinkedIn"
                       variant="standard"
                       // onChange={handleLinks}
-                      name="linkedIn"
+                      name="LinkedIn"
+                      value={this.state.LinkedIn}
+                      ref="LinkedIn"
+                      onChange={this.onChange}
                       InputProps={{
                         style: {
                           fontSize: 15,
@@ -1420,13 +1733,17 @@ class Home extends Component {
                       InputLabelProps={{
                         style: { fontSize: 15, marginLeft: "0px" },
                       }}
+                      required
                     />
                     <TextField
                       className="small_links"
                       id="standard-basic"
                       label="Facebook"
                       variant="standard"
-                      name="facebook"
+                      name="Facebook"
+                      value={this.state.Facebook}
+                      ref="Facebook"
+                      onChange={this.onChange}
                       // onChange={handleLinks}
                       InputProps={{
                         style: {
@@ -1442,13 +1759,17 @@ class Home extends Component {
                       InputLabelProps={{
                         style: { fontSize: 15, marginLeft: "0px" },
                       }}
+                      required
                     />
                     <TextField
                       className="small_links"
                       id="standard-basic"
                       label="Facebook Live"
                       variant="standard"
-                      name="facebookLive"
+                      name="FacebookLive"
+                      value={this.state.FacebookLive}
+                      ref="FacbookLive"
+                      onChange={this.onChange}
                       // onChange={handleLinks}
                       InputProps={{
                         style: {
@@ -1464,13 +1785,17 @@ class Home extends Component {
                       InputLabelProps={{
                         style: { fontSize: 15, marginLeft: "0px" },
                       }}
+                      required
                     />
                     <TextField
                       className="small_links"
                       id="standard-basic"
                       label="Twitter"
                       variant="standard"
-                      name="twitter"
+                      name="Twitter"
+                      value={this.state.Twitter}
+                      ref="Twitter"
+                      onChange={this.onChange}
                       // onChange={handleLinks}
                       InputProps={{
                         style: {
@@ -1486,13 +1811,17 @@ class Home extends Component {
                       InputLabelProps={{
                         style: { fontSize: 15, marginLeft: "0px" },
                       }}
+                      required
                     />
                     <TextField
                       className="small_links"
                       id="standard-basic"
                       label="Instagram"
                       variant="standard"
-                      name="instagram"
+                      name="Instagram"
+                      value={this.state.Instagram}
+                      ref="Instagram"
+                      onChange={this.onChange}
                       // onChange={handleLinks}
                       InputProps={{
                         style: {
@@ -1508,13 +1837,17 @@ class Home extends Component {
                       InputLabelProps={{
                         style: { fontSize: 15, marginLeft: "0px" },
                       }}
+                      required
                     />
                     <TextField
                       className="small_links"
                       id="standard-basic"
                       label="Youtube"
                       variant="standard"
-                      name="youtube"
+                      name="Youtube"
+                      value={this.state.Youtube}
+                      ref="Youtube"
+                      onChange={this.onChange}
                       // onChange={handleLinks}
                       InputProps={{
                         style: {
@@ -1530,13 +1863,17 @@ class Home extends Component {
                       InputLabelProps={{
                         style: { fontSize: 15, marginLeft: "0px" },
                       }}
+                      required
                     />
                     <TextField
                       className="small_links"
                       id="standard-basic"
                       label="Youtube Live"
                       variant="standard"
-                      name="youtubeLive"
+                      name="YoutubeLive"
+                      value={this.state.YoutubeLive}
+                      ref="Youtube Live"
+                      onChange={this.onChange}
                       // onChange={handleLinks}
                       InputProps={{
                         style: {
@@ -1552,13 +1889,17 @@ class Home extends Component {
                       InputLabelProps={{
                         style: { fontSize: 15, marginLeft: "0px" },
                       }}
+                      required
                     />
                     <TextField
                       className="small_links"
                       id="standard-basic"
                       label="Other Website"
                       variant="standard"
-                      name="otherWebsite1"
+                      name="Weblink1"
+                      value={this.state.Weblink1}
+                      ref="Weblink1"
+                      onChange={this.onChange}
                       // onChange={handleLinks}
                       InputProps={{
                         style: {
@@ -1574,13 +1915,17 @@ class Home extends Component {
                       InputLabelProps={{
                         style: { fontSize: 15, marginLeft: "0px" },
                       }}
+                      required
                     />
                     <TextField
                       className="small_links"
                       id="standard-basic"
                       label="Other Website"
                       variant="standard"
-                      name="otherWebsite2"
+                      name="Weblink2"
+                      value={this.state.Weblink2}
+                      ref="Weblink2"
+                      onChange={this.onChange}
                       // onChange={handleLinks}
                       InputProps={{
                         style: {
@@ -1596,13 +1941,12 @@ class Home extends Component {
                       InputLabelProps={{
                         style: { fontSize: 15, marginLeft: "0px" },
                       }}
+                      required
                     />
                   </div>
                   <DialogActions>
                     <Button
-                      onClick={() => {
-                        this.handleClickOpenUpdatePop();
-                      }}
+                      type="submit"
                       style={{ position: "relative", top: "90%" }}
                       variant="contained"
                       disableElevation
@@ -1827,7 +2171,8 @@ class Home extends Component {
                 <a
                   href="#"
                   className="user_lower_part_list_items_links"
-                  onClick={() => this.handleClickOpenChatPop()}
+                  // onClick={() => this.handleClickOpenChatPop()}
+                  onClick={() => this.contact()}
                 >
                   <MdOutlineContactPhone className="common" />
                   <span className="user_links">Contacts</span>
@@ -1838,10 +2183,10 @@ class Home extends Component {
                 <a
                   href="#"
                   className="user_lower_part_list_items_links"
-                  // onClick={() => this.meetingScheduler()}
-                  onClick={() => {
-                    this.handleClickOpenMeetingTime();
-                  }}
+                  onClick={() => this.meetingScheduler()}
+                  // onClick={() => {
+                  //   this.handleClickOpenMeetingTime();
+                  // }}
                 >
                   <MdMeetingRoom className="common" />
                   <span className="user_links">Schedule Meeting</span>

@@ -17,6 +17,7 @@ import "./login.css";
 var x = 0;
 class Login extends Component {
   state = {
+    server_url: process.env.REACT_APP_SERVER_URL,
     username: "",
     password: "",
     isSubmitting: false,
@@ -177,7 +178,7 @@ class Login extends Component {
       // alert("Fill all the required fields");
     }
     // this.setState({ isSubmitting: true }
-    await fetch("http://localhost:65000/login", {
+    await fetch(this.state.server_url + "/login", {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -196,7 +197,7 @@ class Login extends Component {
           this.setState({ invalidcred: "invalid UserName or Password" });
         } else {
           localStorage.setItem("user", username);
-          fetch("http://localhost:65000/getuser", {
+          fetch(this.state.server_url + "/getuser", {
             method: "post",
             headers: {
               "Content-Type": "application/json",
@@ -312,16 +313,25 @@ class Login extends Component {
             <div
               style={{
                 zIndex: "10000000",
-                backgroundColor: "white",
-                padding: "10px",
-                color: "grey",
-                fontSize: "1.4rem",
+                fontSize: "2.4rem",
                 position: "absolute",
-                top: "10%",
-                left: "40%",
+                top: "2%",
+                left: "38%",
+                width: "272px",
+                height: "158px",
+                backgroundColor: "#033a5a",
+                border: "1px solid #2e2e4c",
+                textAlign: "center",
+                boxShadow:
+                  "3px 9px 16px rgba(152, .149, .149, 0.4) ,-3px -3px 10px rgba(255, .255, .255, 0.06),inset 14px 14px 26px rgb(0, .0, .0, 0.3),inset -3px -3px 15px rgba(206, .196, .196, 0.05)",
+                borderRadius: "10px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
               }}
             >
-              <span>
+              <span style={{ color: "white" }}>
                 {" "}
                 {this.state.invalidcred}
                 <br></br>
@@ -330,8 +340,19 @@ class Login extends Component {
                 <button
                   style={{
                     backgroundColor: "#4FADD3",
+
                     color: "white",
                     border: "none",
+                    width: "100px",
+                    padding: "1rem",
+                    marginTop: "20px",
+                    borderRadius: "10px",
+                    cursor: "pointer",
+                    boxShadow:
+                      "3px 9px 16px rgb(0 0 0 / 40%), -3px -3px 10px rgb(255 255 255 / 6%), inset 14px 14px 26px rgb(0 0 0 / 30%), inset -3px -3px 15px rgb(255 255 255 / 5%)",
+                    borderWwidth: "1px 0px 0px 1px",
+                    borderStyle: "solid",
+                    borderColor: "rgba(255, 255, 255, 0.2)",
                   }}
                   onClick={() =>
                     this.setState({

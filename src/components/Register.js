@@ -13,6 +13,7 @@ import banner from "./main-banner.jpg";
 import "./register.css";
 class Register extends Component {
   state = {
+    server_url: process.env.REACT_APP_SERVER_URL,
     firstName: "",
     lastName: "",
     username: "",
@@ -143,7 +144,7 @@ class Register extends Component {
     console.log("s", privateKey);
     if (enteredcode == this.state.code) {
       this.setState({ successfullyverifyalert: "Successfully Verified" });
-      API.post("/users", {
+      API.post(this.state.server_url + "/users", {
         username: this.state.username,
         email: this.state.email,
         password: this.state.password,
@@ -252,21 +253,21 @@ class Register extends Component {
       });
       // alert("Fill all the required boxes");
     } else {
-      API.post("/users", {
+      API.post(this.state.server_url + "/users", {
         username: this.state.username,
         email: this.state.email,
         password: this.state.password,
-      })
-        .then((res) => {
-          this.props.flashHandler("success", "Signed Up Succesfully!");
-          this.props.showSignup(0);
-          this.props.showLogin(1);
-        })
-        .catch((error) => {
-          this.props.flashHandler("error", "An Error Occured!");
-        });
+      }).then((res) => {
+        // this.props.flashHandler("success", "Signed Up Succesfully!");
+        alert("success ,signed up successfully");
+        // this.props.showSignup(0);
+        // this.props.showLogin(1);
+      });
+      // .catch((error) => {
+      //   this.props.flashHandler("error", "An Error Occured!");
+      // });
 
-      await fetch("/signup", {
+      await fetch(this.state.server_url + "/signup", {
         method: "post",
         headers: {
           "Content-Type": "application/json",
@@ -714,17 +715,7 @@ class Register extends Component {
                   <span>
                     {" "}
                     <Link to="/login" style={{ textDecoration: "none" }}>
-                      <h5
-                        style={{
-                          color: "black",
-                          textAlign: "right",
-                          width: "100%",
-                          marginLeft: "100px",
-                          marginTop: "10px",
-                          fontSize: "1rem",
-                          color: "white",
-                        }}
-                      >
+                      <h5 className="marginal">
                         Already Registered? Sign In here{" "}
                       </h5>
                     </Link>

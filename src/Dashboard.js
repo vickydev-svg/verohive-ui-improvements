@@ -722,6 +722,7 @@ class Dashboard extends Component {
         div.className = "videoContainer";
         var name = document.createElement("div");
         div.id = userid + "div";
+        video.className = "hello_video";
         video.id = userid;
         video.autoplay = true;
         video.controls = false;
@@ -1291,7 +1292,7 @@ class Dashboard extends Component {
           myarray.forEach((userid) => {
             if (myarray.length == 1) {
               document.getElementById(userid).style.width = "200px";
-              document.getElementById(userid).style.maxHeight = "113px";
+              // document.getElementById(userid).style.maxHeight = "113px";
               document.getElementById(userid).style.maxWidth = "80vw";
             } else if (myarray.length == 2) {
               document.getElementById(userid).style.width = "200px";
@@ -18580,7 +18581,12 @@ class Dashboard extends Component {
                 Room id: {this.state.meetingid}
               </div>
               <div className="dashboard_network">
-                Welcome {this.state.id} &nbsp;&nbsp;&nbsp;&nbsp;
+                <span
+                  className="welcome_vicky"
+                  style={{ marginTop: "13px", fontSize: "1rem" }}
+                >
+                  Welcome {this.state.id} &nbsp;&nbsp;&nbsp;&nbsp;
+                </span>
                 <div>
                   {this.state.networkGood ? (
                     <div class="signal-bars mt1 sizing-box good four-bars">
@@ -18623,6 +18629,25 @@ class Dashboard extends Component {
                 </div>
               </div>
             </div>
+            <ul style={{ display: "none" }} id="hostrecordred">
+              <MuiThemeProvider theme={theme}>
+                <Tooltip title="Recording">
+                  <li style={{ fontStyle: "none" }}>
+                    <i
+                      style={{
+                        cursor: "pointer",
+                        marginTop: "12px",
+                        fontSize: "30px",
+                        color: "red",
+                      }}
+                      class="material-icons"
+                    >
+                      radio_button_checked
+                    </i>
+                  </li>
+                </Tooltip>
+              </MuiThemeProvider>
+            </ul>
 
             {/* <div className="header">
               <img src={logo} className="logo-vero"></img>
