@@ -3,6 +3,20 @@ import AlertDialogSlide from "./LoginPopup/LoginPopup";
 import GoogleIcon from "@mui/icons-material/Google";
 import AppleIcon from "@mui/icons-material/Apple";
 import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
+import TermsCondition from "./Footer/Footer";
+import ScheduleIcon from "@mui/icons-material/Schedule";
+// import Sidebar from "./components/Sidebar/Sidebar";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ContactsIcon from "@mui/icons-material/Contacts";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import CloseIcon from "@mui/icons-material/Close";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import Navbar from "./Navbar/Navbar";
 import image from "../imgs/girl.png";
 import { Link } from "react-router-dom";
@@ -14,9 +28,12 @@ import Privacypolicy from "../privacypolicy";
 import copyrightlogo from "../imgs/CopyrightVERO.png";
 import banner from "./welcome.jpg";
 import "./login.css";
+// import TermsCondition from "../TermsCondition";
 var x = 0;
 class Login extends Component {
   state = {
+    privacyPolicy: false,
+    termsCondition: false,
     server_url: process.env.REACT_APP_SERVER_URL,
     username: "",
     password: "",
@@ -262,6 +279,51 @@ class Login extends Component {
   render() {
     return (
       <>
+        {/*  */}
+        {/*  */}
+        {/* PRIVACY POLICY DIALOG BOX */}
+        <Dialog
+          className="dialog"
+          open={this.state.privacyPolicy}
+          onClose={() => {
+            this.handleClosePrivacyPolicy();
+          }}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle
+            id="alert-dialog-title"
+            style={{
+              textAlign: "center",
+              fontSize: "3rem",
+              color: "#204C6D",
+              borderBottom: "2px solid #204C6D",
+            }}
+          >
+            Vero Hive Privacy Policy
+          </DialogTitle>
+          <DialogContent className="dialog_content">
+            <DialogContentText
+              id="alert-dialog-description"
+              className="dialog_content_text"
+            >
+              <div>hii</div>
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              variant="contained"
+              disableElevation
+              onClick={() => {
+                this.handleClosePrivacyPolicy();
+              }}
+            >
+              CLOSE
+            </Button>
+          </DialogActions>
+        </Dialog>
+        {/*  */}
+        {/* PRIVACY POLICY DIALOG BOX ENDS */}
         <Navbar />
         <div className="login-wrapper">
           {/* <div className="header">
@@ -702,6 +764,7 @@ Premium and Executive Members that have guest speakers at their events can eithe
             </div>
           </div>
         </div>
+        {/* <TermsCondition /> */}
       </>
     );
   }

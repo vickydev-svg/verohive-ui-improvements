@@ -1,8 +1,10 @@
 import React, { Component } from "react";
+import ScheduleIcon from "@mui/icons-material/Schedule";
 import Sidebar from "./components/Sidebar/Sidebar";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ContactsIcon from "@mui/icons-material/Contacts";
-import ScheduleIcon from "@mui/icons-material/Schedule";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import CloseIcon from "@mui/icons-material/Close";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -53,6 +55,10 @@ import { MdMeetingRoom } from "react-icons/md";
 import { MdCardMembership } from "react-icons/md";
 import axios from "axios";
 import "./home.css";
+import "./index.css";
+// import io from "socket.io-client";
+import Contact from "./profile/contact";
+import { homedir } from "os";
 import {
   createMuiTheme,
   MuiThemeProvider,
@@ -80,13 +86,33 @@ import TermsCondition from "./TermsCondition";
 import { Socket } from "socket.io-client";
 import io from "socket.io-client";
 import Membership from "./Membership";
-
+import Axios from "axios";
 var socket = io();
 let currentStream;
 class Home extends Component {
   videoEle = React.createRef();
   selectEle = React.createRef();
   state = {
+    hostValidation: false,
+    list: [],
+    myMeetings: false,
+    meeting: false,
+    value: "",
+    emails: [],
+    error: null,
+    titleValue: "",
+    description: "",
+    gapi: "",
+    CLIENT_ID: "",
+    API_KEY: "",
+    DISCOVERY_DOCS: "",
+    date: "",
+    enddate: "",
+    SCOPES: "",
+    usersTimeZone: "",
+    time: "",
+    endTime: "",
+    Roomname: "",
     server_url: process.env.REACT_APP_SERVER_URL,
     updateProfile: false,
     open: false,
@@ -169,6 +195,10 @@ class Home extends Component {
     SCveroKey: "",
     Cemail: "",
     mailsentalert: "",
+    hostroomcode: "",
+    invitationsentsuccessfully: "",
+    Message: "",
+    showContact: false,
   };
 
   componentDidMount() {
@@ -236,6 +266,28 @@ class Home extends Component {
       id: this.props.location.state.username,
     });
 
+    const getMycontacts = () => {
+      let name = this.state.firstname + " " + this.state.lastname;
+      let privateKey = this.state.privatekey.toString();
+      console.log(name, privateKey);
+      Axios.post(
+        "https://messangerapi533cdgf6c556.amaprods.com/api/contact/contact-list/",
+        {
+          veroKey: privateKey,
+          name: name,
+        }
+      )
+        .then((res) => {
+          console.log(JSON.parse(res.data.data.contact), "contacts sky");
+          const contactParse = JSON.parse(res.data.data.contact);
+          this.setState({ Contacts: contactParse });
+        })
+        .catch((err) => {
+          console.log(err);
+          console.log(name, privateKey);
+        });
+    };
+
     fetch(this.state.server_url + "/getuser", {
       method: "post",
       headers: {
@@ -271,6 +323,7 @@ class Home extends Component {
           Weblink2: res.weblink2,
           image1: res.ProfilePic,
           roompin: res.roompin,
+          usertype: res.userType,
         });
         const emailforStatus = res.email;
         this.setState({
@@ -300,8 +353,31 @@ class Home extends Component {
             }
           });
       })
+      .then(() => {
+        getMycontacts();
+      })
       .catch((err) => console.log(err));
-
+    var d = new Date();
+    var n = d.getTimezoneOffset();
+    var sign = Math.sign(n);
+    if (sign == 1) {
+      n = n;
+    } else n = n * sign;
+    var hours = Math.floor(n / 60);
+    if (hours < 10) {
+      hours = "0" + hours;
+    }
+    var minutes = n % 60;
+    if (minutes < 10) {
+      minutes = "0" + minutes;
+    }
+    var yourtimezone = hours + ":" + minutes;
+    if (Math.sign(n) == 1) {
+      yourtimezone = "+" + yourtimezone;
+    } else yourtimezone = "-" + yourtimezone;
+    this.setState({
+      usersTimeZone: yourtimezone,
+    });
     window.onbeforeunload = () => {
       window.setTimeout(() => {
         this.props.history.push("/private", {
@@ -364,6 +440,78 @@ class Home extends Component {
       console.log(err);
     }
   };
+  componentToHex = (c) => {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+  };
+  rgbToHex = (r, g, b) => {
+    return (
+      "#" +
+      this.componentToHex(r) +
+      this.componentToHex(g) +
+      this.componentToHex(b)
+    );
+  };
+  getRandomColor = (name) => {
+    // get first alphabet in upper case
+    const firstAlphabet = name.charAt(0).toLowerCase();
+
+    // get the ASCII code of the character
+    const asciiCode = firstAlphabet.charCodeAt(0);
+
+    // number that contains 3 times ASCII value of character -- unique for every alphabet
+    const colorNum =
+      asciiCode.toString() + asciiCode.toString() + asciiCode.toString();
+
+    var num = Math.round(0xffffff * parseInt(colorNum));
+    var r = (num >> 16) & 255;
+    var g = (num >> 8) & 255;
+    var b = num & 255;
+
+    return {
+      color: this.rgbToHex(r, g, b),
+      character: firstAlphabet.toUpperCase(),
+    };
+  };
+  createRoom = () => {
+    var rand, mailOptions, host, link;
+    var rand1 = Math.floor(Math.random() * 100 + 54);
+    var rand2 = Math.floor(Math.random() * 100 + 54);
+    var rand3 = Math.floor(Math.random() * 100 + 54);
+    var rand4 = Math.floor(Math.random() * 100 + 54);
+    var rand5 = Math.floor(Math.random() * 100 + 54);
+
+    rand =
+      rand1.toString() +
+      rand2.toString() +
+      rand3.toString() +
+      rand4.toString() +
+      rand5.toString();
+
+    // socket.emit('roompin', { pin: localStorage.verokey, roomcode: rand })
+    this.setState({
+      hostroomcode: rand,
+    });
+  };
+  contact = () => {
+    this.props.history.push("/contact", {
+      username: this.state.id,
+    });
+  };
+  miniapp = () => {
+    this.props.history.push("/Miniapp", {
+      username: "guest",
+    });
+  };
+  meetingmediaserver = () => {
+    this.props.history.push("/meeting");
+  };
+  TermsCondition = () => {
+    this.props.history.push("/TermsCondition", {
+      username: this.state.id,
+    });
+  };
+
   changeSource = (e) => {
     console.log("Change to:", e.target.value);
     this.setState({
@@ -509,11 +657,196 @@ class Home extends Component {
   };
   //invitenewuser
   handleChange(event) {
+    const name = event.target.name;
+    const value = event.target.value;
+    this.setState({
+      [name]: value,
+    });
     // do something with event.target.checked
     this.setState({
       baconIsReady: event.target.checked,
     });
   }
+
+  notify = () =>
+    toast("YOU ARE NO THE HOST", {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      zIndex: 10000000000000000,
+      fontSize: "3rem",
+    });
+
+  handleKeyDown = (e) => {
+    if (["Enter", "Tab", "Spacebar", ","].includes(e.key)) {
+      e.preventDefault();
+
+      var email = this.state.value.trim();
+      if (email && this.isValid(email)) {
+        this.setState({
+          emails: [...this.state.emails, email],
+          value: "",
+          error: "",
+        });
+      }
+    }
+  };
+
+  isValid(email) {
+    var error = null;
+
+    if (!this.isEmail(email)) {
+      error = `${email} is not a valid email address.`;
+    }
+
+    if (this.isInList(email)) {
+      error = `${email} has already been added.`;
+    }
+
+    if (error) {
+      this.setState({ error });
+
+      return false;
+    }
+
+    return true;
+  }
+
+  isEmail(email) {
+    return /[\w\d\.-]+@[\w\d\.-]+\.[\w\d\.-]+/.test(email);
+  }
+  isInList(email) {
+    return this.state.emails.includes(email);
+  }
+  handleClick() {
+    var rand, mailOptions, host, link;
+    var rand1 = Math.floor(Math.random() * 100 + 54);
+    var rand2 = Math.floor(Math.random() * 100 + 54);
+    var rand3 = Math.floor(Math.random() * 100 + 54);
+    var rand4 = Math.floor(Math.random() * 100 + 54);
+    var rand5 = Math.floor(Math.random() * 100 + 54);
+
+    rand =
+      this.state.roompin +
+      rand3.toString() +
+      rand4.toString() +
+      rand5.toString();
+    this.setState({
+      list: [...this.state.list, rand],
+    });
+    this.state.emails.forEach((email) => {
+      fetch(this.state.server_url + "/nodemailer", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          To: email,
+          subject: "VeroTownhall Meeting Invitation",
+          text: "Your invitation Code is" + rand,
+          html: `<img src="https://mhiservers.com/uO0muCuiv37bWZ0iiaPfsWUheuH6tGSgAssets/aB17BMXtfrcywe6Jh0RUMcN4dARoM6kyimages/IvLvPO7ygnYzNg7PDE9AIfrvxEzs7p4zpublic/icons/verohivelogo.png" style="width: 150px;">'
+        <h1 style="color: #5b5b5b;">VEROTownhall Meeting Invitation</h1>
+        <h3>You are invited by : ${
+          this.state.firstname + " " + this.state.lastname
+        } </h3>
+
+        <br>
+        <h3 style="color: #757575;">Meeting ID :${rand}</h3>
+        <h3 style="color: #757575;">Meeting Date :${this.state.date}</h3>
+        <h3 style="color: #757575;">Meeting Time :${this.state.time}  GMT${
+            this.state.usersTimeZone
+          }  ${Intl.DateTimeFormat().resolvedOptions().timeZone}</h3>
+        <a style="font-size:1.5rem;font-weight:bold;text-decoration:none" href="https://www.verohive.net/21AEF56E76A866F1161468CEBF5B23A9CE43F5E6319D050E498E77C02FDDD7BDcbvhjdferut4545347nvfrjhrt43734/#${rand}">ATTENDEE CLICK HERE TO ENTER MEETING</a>           
+          <br> 
+        <p style="color: #757575;">${this.state.Message}</p>
+            
+      
+      <br>
+      <h2 style="color: red;">**IMPORTANT: For Use Only on Google Chrome, Firefox or Microsoft Edge Chrome Browsers, Safari Browsers are NOT Supported**</h2>
+
+        <h3>Alternatively: Attendee's who want to use their accounts follow the below instructions:</h3>    
+       <p>
+       
+       Click on the link below to sign into your VEROHive account, if you do not have an account then go to <a href=https://www.verohive.net/>VEROTownhall</a> to create one to join the meeting and be a part of  the growing VEROHive community.
+       </p>
+      <p>
+      The security and privacy of our members is important, this is why VEROHive provides end to end encryption on our system for all members.
+      </p>
+      <p>
+      Learn more about how VEROHive works by going to <a href=https://verohive.com>www.verohive.com</a>
+      </p>
+      
+       <a href=https://www.verohive.net/>Sign in or Sign up </a>
+       
+        <h5>Note: Place Attendee Room ID in the Attendee Room ID slot on your dashboard.</h5>
+        
+        <h4 style="color: #757575;">Cheers!</h4>
+        <h4 style="color: #757575;">VeroTownhall Team</h4>
+        `,
+        }),
+      })
+        .then(() => {
+          console.log(this.state.date, this.state.time);
+          //  this.verify()
+          this.setState({
+            invitationsentsuccessfully: "Invitation sent successfully",
+            hostroomcode: rand,
+          });
+          fetch(this.state.server_url + "/nodemailer", {
+            method: "post",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              To: this.state.email,
+              subject: "VeroHivel Meeting Notification",
+              text: "Your Room Code is" + rand,
+              html: `<img src="https://mhiservers.com/uO0muCuiv37bWZ0iiaPfsWUheuH6tGSgAssets/aB17BMXtfrcywe6Jh0RUMcN4dARoM6kyimages/IvLvPO7ygnYzNg7PDE9AIfrvxEzs7p4zpublic/icons/verohivelogo.png" style="width: 150px;">'
+                <h1 style="color: #5b5b5b;">VeroHivel Meeting Notification</h1>
+                <h3> Hello! ${this.state.firstname + " " + this.state.lastname}
+                <h3>You recently scheduled a meeting with ${email} </h3>
+                    
+              
+              <br>
+               <h3 style="color: #757575;">Meeting ID :${rand}</h3>
+               <h3 style="color: #757575;">Meeting Date :${this.state.date}</h3>
+               <h3 style="color: #757575;">Meeting Time :${
+                 this.state.time
+               }  GMT${this.state.usersTimeZone}  ${
+                Intl.DateTimeFormat().resolvedOptions().timeZone
+              }</h3>
+    
+               
+    
+                <h4 style="color: #757575;">Cheers!</h4>
+                <h4 style="color: #757575;">VEROHive Team</h4>
+                `,
+            }),
+          })
+            .then(() => {
+              console.log("success email sent", email);
+
+              // alert("Invitation sent successfully")
+            })
+            .catch((err) => console.log(err));
+
+          // alert("Invitation sent successfully")
+        })
+        .catch((err) => console.log(err));
+    });
+  }
+
+  handleDelete = (toBeRemove) => {
+    this.setState({
+      emails: this.state.emails.filter((email) => email !== toBeRemove),
+    });
+  };
+
   contact = () => {
     this.props.history.push("/contact", {
       username: this.state.id,
@@ -864,9 +1197,13 @@ class Home extends Component {
         },
       });
     } else {
-      this.setState({
-        youarenothost: "you are not the host of this room",
-      });
+      console.log("you r not the host");
+
+      this.notify();
+
+      // this.setState({
+      //   youarenothost: "you are not the host of this room",
+      // });
     }
   };
   createRoom = () => {
@@ -1130,7 +1467,13 @@ class Home extends Component {
   // }
   handleCloseMeetingTime = () => {
     this.setState({
-      meetingTime: false,
+      meeting: false,
+    });
+  };
+
+  handleCloseMyMeetings = () => {
+    this.setState({
+      myMeetings: false,
     });
   };
   handleCloseUpdatePop = () => {
@@ -1138,14 +1481,25 @@ class Home extends Component {
       updateProfile: false,
     });
   };
+  handleCloseHostValidation = () => {
+    this.setState({
+      hostValidation: false,
+    });
+  };
+
+  handleClickOpenHostValidation = () => {
+    this.setState({
+      hostValidation: true,
+    });
+  };
   handleCloseContactPop = () => {
     this.setState({
       contactPop: false,
     });
   };
-  handleClickOpenMeetingTime = () => {
+  handleClickOpenMyMeetings = () => {
     this.setState({
-      meetingTime: true,
+      myMeetings: true,
     });
   };
   handleClickOpenUpdatePop = () => {
@@ -1153,6 +1507,11 @@ class Home extends Component {
       updateProfile: true,
     });
   };
+  handleClickOpenMeetingTime() {
+    this.setState({
+      meeting: true,
+    });
+  }
   handleClickOpenChatPop = () => {
     this.setState({
       contactPop: true,
@@ -1203,6 +1562,534 @@ class Home extends Component {
 
     return (
       <>
+        <ToastContainer style={{ zIndex: "100000000000", fontSize: "4rem" }} />
+        {this.state.invitationsentsuccessfully != "" ? (
+          <div
+            style={{
+              zIndex: "10000000",
+              backgroundColor: "white",
+              padding: "10px",
+              color: "grey",
+              fontSize: "2.4rem",
+              position: "absolute",
+              top: "19%",
+              left: "29%",
+              width: "272px",
+              height: "158px",
+              backgroundColor: "#033a5a",
+              border: "1px solid #2e2e4c",
+              textAlign: "center",
+              boxShadow:
+                "3px 9px 16px rgba(152, .149, .149, 0.4) ,-3px -3px 10px rgba(255, .255, .255, 0.06),inset 14px 14px 26px rgb(0, .0, .0, 0.3),inset -3px -3px 15px rgba(206, .196, .196, 0.05)",
+              borderRadius: "10px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
+            className="wrapper"
+          >
+            <span>
+              {" "}
+              {this.state.invitationsentsuccessfully}
+              <br></br>
+            </span>
+            <span style={{ color: "white" }}>
+              Meeting Room ID: {this.state.hostroomcode}
+              <br></br>
+            </span>
+            <br></br>
+            <span>
+              <button
+                style={{
+                  backgroundColor: "#4FADD3",
+
+                  color: "white",
+                  border: "none",
+                  width: "100px",
+                  padding: "1rem",
+                  marginTop: "20px",
+                  borderRadius: "10px",
+                  cursor: "pointer",
+                  boxShadow:
+                    "3px 9px 16px rgb(0 0 0 / 40%), -3px -3px 10px rgb(255 255 255 / 6%), inset 14px 14px 26px rgb(0 0 0 / 30%), inset -3px -3px 15px rgb(255 255 255 / 5%)",
+                  borderWwidth: "1px 0px 0px 1px",
+                  borderStyle: "solid",
+                  borderColor: "rgba(255, 255, 255, 0.2)",
+                }}
+                onClick={() => {
+                  this.setState({
+                    invitationsentsuccessfully: "",
+                    hostroomcode: "",
+                  });
+
+                  // this.Home();
+                }}
+              >
+                OK
+              </button>
+            </span>
+          </div>
+        ) : null}
+
+        {/* HOST VALIDATION ENTERING FROM MEETINGS LIST */}
+        <Dialog
+          open={this.state.hostValidation}
+          onClose={() => {
+            this.handleCloseHostValidation();
+          }}
+          style={{
+            zIndex: "500000",
+            height: "40%",
+            top: "30%",
+          }}
+        >
+          <DialogTitle></DialogTitle>
+          <DialogContent style={{}}>
+            <DialogContentText style={{ color: "#033a5a" }}>
+              To Enter the Room plz entry your Host Room Id
+            </DialogContentText>
+            <TextField
+              style={{ marginTop: "40px" }}
+              autoFocus
+              margin="dense"
+              id="name"
+              label="HOST ROOM ID"
+              name="joinhost_code"
+              fullWidth
+              variant="standard"
+              InputProps={{
+                style: {
+                  fontSize: 15,
+                  fontWeight: 500,
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "80%",
+                  margin: "20px 0px 0px 10px",
+                },
+              }}
+              InputLabelProps={{
+                style: { fontSize: 20, margin: "0 0 0 10px" },
+              }}
+              onChange={(event) => {
+                this.inputHandler(event);
+              }}
+              value={this.state.joinhost_code}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => {
+                this.joinhostnow();
+              }}
+            >
+              Enter
+            </Button>
+            <Button
+              onClick={() => {
+                this.handleCloseHostValidation();
+              }}
+            >
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
+        {/*  */}
+        {/* schedule meeting popup */}
+        <Dialog
+          className="metting_dialog dialog"
+          open={this.state.meeting}
+          onClose={() => {
+            this.handleCloseMeetingTime();
+          }}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle
+            id="alert-dialog-title"
+            style={{
+              textAlign: "center",
+              fontSize: "2rem",
+              color: "#204C6D",
+              borderBottom: "2px solid #204C6D",
+            }}
+          >
+            SCHEDULE YOUR MEETINGS
+          </DialogTitle>
+          <DialogContent className="metting_dialog_content">
+            <DialogContentText
+              id="alert-dialog-description"
+              className="metting_dialog_content_text"
+            >
+              {this.state.emails.map((email) => (
+                <div className="tag-item" key={email}>
+                  {email}
+                  <button
+                    type="button"
+                    className="button"
+                    onClick={() => this.handleDelete(email)}
+                  >
+                    &times;
+                  </button>
+                </div>
+              ))}
+              <div className="email_and_button">
+                <TextField
+                  fullWidth
+                  name="value"
+                  label="Type Attendee Email Address"
+                  id="fullWidth"
+                  className="metting_textField"
+                  value={this.state.value}
+                  onChange={this.onChange}
+                  onKeyDown={this.handleKeyDown}
+                  InputProps={{
+                    style: {
+                      fontSize: 15,
+                      fontWeight: 700,
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      width: "100%",
+                      margin: "20px 0px 0px 0px",
+                      color: "black",
+                    },
+                  }}
+                  variant="standard"
+                  InputLabelProps={{
+                    style: {
+                      fontSize: 15,
+                      margin: "0 0 0 0px",
+                      fontWeight: 500,
+                      color: "#204C6D",
+                    },
+                  }}
+                />
+
+                <div
+                  style={
+                    this.state.Contacts.length
+                      ? { maxHeight: "50vh", overflowY: "auto" }
+                      : { display: "flex", justifyContent: "center" }
+                  }
+                >
+                  {this.state.Contacts.length && this.state.showContact
+                    ? this.state.Contacts.map((user) => (
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            maxWidth: "300px",
+                            maxHeight: "40px",
+                            padding: "10px",
+                            margin: "10px",
+                            color: "black",
+                            backgroundColor: "#D5D0D0",
+                            cursor: "pointer",
+                            borderRadius: "5px",
+                          }}
+                          onClick={() => {
+                            const privateKey = user.veroKey;
+                            Axios.post(
+                              "https://messangerapi533cdgf6c556.amaprods.com/api/users/veroKeytestingrandom676767/",
+                              {
+                                id: privateKey,
+                              }
+                            )
+                              .then((res) => {
+                                console.log(res.data, "email data");
+                                if (this.isValid(res.data.data.email)) {
+                                  this.setState({
+                                    emails: [
+                                      ...this.state.emails,
+                                      res.data.data.email,
+                                    ],
+                                    value: "",
+                                    error: "",
+                                  });
+                                }
+                              })
+                              .catch((err) => console.log(err));
+                          }}
+                        >
+                          {user.profileImage ? (
+                            <img
+                              src={user.profileImage}
+                              style={{
+                                width: "60px",
+                                height: "60px",
+                                marginRight: "15px",
+                                borderRadius: "50px",
+                              }}
+                            />
+                          ) : (
+                            <p
+                              style={{
+                                fontSize: "30px",
+                                width: "60px",
+                                textAlign: "center",
+                                height: "60px",
+                                marginRight: "15px",
+                                borderRadius: "50px",
+                                backgroundColor: "white",
+                                color: this.getRandomColor(user.name).color,
+                                fontWeight: "bold",
+                                textAlignVertical: "center",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                              }}
+                            >
+                              {user.name.charAt(0).toUpperCase()}
+                            </p>
+                          )}
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              justifyContent: "center",
+                              alignItems: "center",
+                            }}
+                          >
+                            {" "}
+                            <li
+                              style={{ fontWeight: "bold", fontSize: "10px" }}
+                            >
+                              {user.name}
+                            </li>
+                            <li
+                              style={{
+                                fontSize: "16px",
+                                color: "grey",
+                                maxWidth: "200px",
+                              }}
+                            >
+                              {user.veroKey}
+                            </li>
+                          </div>
+                        </div>
+                      ))
+                    : null}
+                  <br></br>
+                </div>
+                <Button
+                  className="email_metting_button"
+                  variant="contained"
+                  startIcon={<ContactsIcon />}
+                  onClick={() =>
+                    this.setState({ showContact: !this.state.showContact })
+                  }
+                >
+                  Add From Contacts
+                </Button>
+              </div>
+              {this.state.error && <p className="error">{this.state.error}</p>}
+              <div className="metting_title">
+                <TextField
+                  name="titleValue"
+                  fullWidth
+                  label="Meeting Title"
+                  id="fullWidth"
+                  className="metting_textField"
+                  value={this.state.titleValue}
+                  onChange={this.onChange}
+                  InputProps={{
+                    style: {
+                      fontSize: 15,
+                      fontWeight: 700,
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      width: "100%",
+                      margin: "20px 0px 0px 0px",
+                      color: "black",
+                    },
+                  }}
+                  variant="standard"
+                  InputLabelProps={{
+                    style: {
+                      fontSize: 15,
+                      margin: "0 0 0 0px",
+                      fontWeight: 500,
+                      color: "#204C6D",
+                    },
+                  }}
+                />
+              </div>
+
+              <div className="meeting_date">
+                <TextField
+                  name="date"
+                  value={this.state.date}
+                  onChange={this.onChange}
+                  type="datetime-local"
+                  fullWidth
+                  id="fullWidth"
+                  className="metting_textField"
+                  InputProps={{
+                    style: {
+                      fontSize: 15,
+                      fontWeight: 700,
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      width: "100%",
+                      margin: "20px 0px 0px 0px",
+                      color: "black",
+                    },
+                  }}
+                  variant="standard"
+                  InputLabelProps={{
+                    style: {
+                      fontSize: 15,
+                      margin: "0 0 0 0px",
+                      fontWeight: 500,
+                      color: "#204C6D",
+                    },
+                  }}
+                />
+              </div>
+
+              <div className="metting_message">
+                <TextField
+                  fullWidth
+                  name="message"
+                  // type="message"
+                  value={this.state.Message}
+                  onChange={this.onChange}
+                  label="Message"
+                  id="fullWidth"
+                  className="metting_textField"
+                  InputProps={{
+                    style: {
+                      fontSize: 15,
+                      fontWeight: 700,
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      width: "100%",
+                      margin: "20px 0px 0px 0px",
+                      color: "black",
+                    },
+                  }}
+                  variant="standard"
+                  InputLabelProps={{
+                    style: {
+                      fontSize: 15,
+                      margin: "0 0 0 0px",
+                      fontWeight: 500,
+                      color: "#204C6D",
+                    },
+                  }}
+                />
+                <Button
+                  className="email_metting_button"
+                  variant="contained"
+                  startIcon={<ScheduleIcon />}
+                  onClick={() => {
+                    this.handleClick();
+                  }}
+                >
+                  Schedule Meeting
+                </Button>
+
+                <Button
+                  className="email_metting_button"
+                  variant="contained"
+                  startIcon={<ScheduleIcon />}
+                  onClick={() => {
+                    this.handleClick();
+                  }}
+                  style={{ marginLeft: "10px" }}
+                >
+                  Meetings List
+                </Button>
+                <div style={{ display: "none" }}>
+                  <input
+                    className="input"
+                    type="text"
+                    name="roompin"
+                    value={this.state.roompin}
+                    disabled={true}
+                    placeholder="roompin"
+                    ref="roompin"
+                  />
+                </div>
+              </div>
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              variant="contained"
+              startIcon={<CloseIcon />}
+              onClick={() => {
+                this.handleCloseMeetingTime();
+              }}
+            >
+              CLOSE
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/*  MY MEETINGS POPUP*/}
+        <Dialog
+          className="dialog"
+          open={this.state.myMeetings}
+          onClose={() => {
+            this.handleCloseMyMeetings();
+          }}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle
+            id="alert-dialog-title"
+            style={{
+              textAlign: "center",
+              fontSize: "3rem",
+              color: "#204C6D",
+              borderBottom: "2px solid #204C6D",
+            }}
+          >
+            My Meetings
+          </DialogTitle>
+          <DialogContent className="dialog_content">
+            <DialogContentText
+              id="alert-dialog-description"
+              className="dialog_content_text"
+            >
+              {this.state.list.map((id) => (
+                <div
+                  className="blue_box"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    this.handleClickOpenHostValidation();
+                  }}
+                >
+                  <div className="box_room_id box_common">{id}</div>
+                  <div className="box_date box_common">{this.state.date}</div>
+                  <div className="box_time box_common">
+                    {this.state.usersTimeZone}
+                  </div>
+                </div>
+              ))}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              variant="contained"
+              disableElevation
+              onClick={() => {
+                this.handleCloseMyMeetings();
+              }}
+            >
+              CLOSE
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* my meetings popup end */}
         {/* profile update alert */}
         {this.state.profileupdatealert != "" ? (
           <div
@@ -1266,195 +2153,7 @@ class Home extends Component {
           </div>
         ) : null}
         {/* MEETING SCHEDULE POPUP */}
-        <Dialog
-          className="metting_dialog dialog"
-          open={this.state.meetingTime}
-          onClose={() => {
-            this.handleCloseMeetingTime();
-          }}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle
-            id="alert-dialog-title"
-            style={{
-              textAlign: "center",
-              fontSize: "2rem",
-              color: "#204C6D",
-              borderBottom: "2px solid #204C6D",
-            }}
-          >
-            SCHEDULE YOUR MEETINGS
-          </DialogTitle>
-          <DialogContent className="metting_dialog_content">
-            <DialogContentText
-              id="alert-dialog-description"
-              className="metting_dialog_content_text"
-            >
-              <div className="email_and_button">
-                <TextField
-                  fullWidth
-                  label="Type Attendee Email Address"
-                  id="fullWidth"
-                  className="metting_textField"
-                  InputProps={{
-                    style: {
-                      fontSize: 15,
-                      fontWeight: 700,
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      width: "100%",
-                      margin: "20px 0px 0px 0px",
-                      color: "black",
-                    },
-                  }}
-                  variant="standard"
-                  InputLabelProps={{
-                    style: {
-                      fontSize: 15,
-                      margin: "0 0 0 0px",
-                      fontWeight: 500,
-                      color: "#204C6D",
-                    },
-                  }}
-                />
-                <Button
-                  className="email_metting_button"
-                  variant="contained"
-                  startIcon={<ContactsIcon />}
-                >
-                  Add From Contacts
-                </Button>
-              </div>
-              <div className="metting_title">
-                <TextField
-                  fullWidth
-                  label="Meeting Title"
-                  id="fullWidth"
-                  className="metting_textField"
-                  InputProps={{
-                    style: {
-                      fontSize: 15,
-                      fontWeight: 700,
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      width: "100%",
-                      margin: "20px 0px 0px 0px",
-                      color: "black",
-                    },
-                  }}
-                  variant="standard"
-                  InputLabelProps={{
-                    style: {
-                      fontSize: 15,
-                      margin: "0 0 0 0px",
-                      fontWeight: 500,
-                      color: "#204C6D",
-                    },
-                  }}
-                />
-              </div>
 
-              <div className="meeting_date">
-                <TextField
-                  type="datetime-local"
-                  fullWidth
-                  id="fullWidth"
-                  className="metting_textField"
-                  InputProps={{
-                    style: {
-                      fontSize: 15,
-                      fontWeight: 700,
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      width: "100%",
-                      margin: "20px 0px 0px 0px",
-                      color: "black",
-                    },
-                  }}
-                  variant="standard"
-                  InputLabelProps={{
-                    style: {
-                      fontSize: 15,
-                      margin: "0 0 0 0px",
-                      fontWeight: 500,
-                      color: "#204C6D",
-                    },
-                  }}
-                />
-              </div>
-
-              <div className="metting_message">
-                <TextField
-                  fullWidth
-                  label="Message"
-                  id="fullWidth"
-                  className="metting_textField"
-                  InputProps={{
-                    style: {
-                      fontSize: 15,
-                      fontWeight: 700,
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      width: "100%",
-                      margin: "20px 0px 0px 0px",
-                      color: "black",
-                    },
-                  }}
-                  variant="standard"
-                  InputLabelProps={{
-                    style: {
-                      fontSize: 15,
-                      margin: "0 0 0 0px",
-                      fontWeight: 500,
-                      color: "#204C6D",
-                    },
-                  }}
-                />
-                <Button
-                  className="email_metting_button"
-                  variant="contained"
-                  startIcon={<ScheduleIcon />}
-                >
-                  Schedule Meeting
-                </Button>
-              </div>
-              {/* <TextField
-              id="filled-basic"
-              label="Filled"
-              variant="filled"
-              InputProps={{
-                style: {
-                  fontSize: 15,
-                  fontWeight: 500,
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: "100%",
-                },
-              }}
-              InputLabelProps={{
-                style: { fontSize: 15, margin: "0 0 0 10px" },
-              }}
-            /> */}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              variant="contained"
-              startIcon={<CloseIcon />}
-              onClick={() => {
-                this.handleCloseMeetingTime();
-              }}
-            >
-              CLOSE
-            </Button>
-          </DialogActions>
-        </Dialog>
         {/* MEETING SCHEDULE POPUP */}
         {/* UPDATE POPUP */}
         <Dialog
@@ -2019,11 +2718,11 @@ class Home extends Component {
                 </Button>
               </div>
 
-              <div className="loader">
+              {/* <div className="loader">
                 <Stack sx={{ color: "grey.500" }} spacing={2} direction="row">
                   <CircularProgress color="success" />
                 </Stack>
-              </div>
+              </div> */}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
@@ -2183,10 +2882,25 @@ class Home extends Component {
                 <a
                   href="#"
                   className="user_lower_part_list_items_links"
-                  onClick={() => this.meetingScheduler()}
-                  // onClick={() => {
-                  //   this.handleClickOpenMeetingTime();
-                  // }}
+                  onClick={() => this.handleClickOpenMyMeetings()}
+                  // onClick={() => this.contact()}
+                >
+                  <ScheduleIcon
+                    className="common"
+                    style={{ fontSize: "3rem" }}
+                  />
+                  <span className="user_links">My Meetings</span>
+                </a>
+              </li>
+
+              <li className="user_lower_part_list_items">
+                <a
+                  href="#"
+                  className="user_lower_part_list_items_links"
+                  // onClick={() => this.meetingScheduler()}
+                  onClick={() => {
+                    this.handleClickOpenMeetingTime();
+                  }}
                 >
                   <MdMeetingRoom className="common" />
                   <span className="user_links">Schedule Meeting</span>
@@ -2254,14 +2968,14 @@ class Home extends Component {
           {this.state.youarenothost != "" ? (
             <div
               style={{
-                zIndex: "10000000",
+                zIndex: "100000000000",
                 backgroundColor: "white",
                 padding: "10px",
                 color: "grey",
                 fontSize: "2.4rem",
                 position: "absolute",
-                top: "36%",
-                left: "23%",
+                top: "-12%",
+                left: "15%",
                 width: "272px",
                 height: "158px",
                 backgroundColor: "#033a5a",
@@ -2274,6 +2988,7 @@ class Home extends Component {
                 justifyContent: "center",
                 alignItems: "center",
                 flexDirection: "column",
+                zIndex: "70000",
               }}
             >
               <br></br>

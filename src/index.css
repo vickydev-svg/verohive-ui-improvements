@@ -1654,7 +1654,11 @@ a {
   background-color: #fafafa;
   border: thin solid #f3f3f3;
 }
-
+@media screen and (min-width: 600px) {
+  .bottomcontrols {
+    top: 88vh;
+  }
+}
 @media screen and (max-width: 600px) {
   #bigtvvideo,
   #screensharebtn,
@@ -1730,7 +1734,7 @@ a {
   .videoContainer {
     float: left;
     margin: 10px;
-    max-width: 80vw;
+    /* max-width: 80vw; */
   }
 }
 

@@ -1101,7 +1101,7 @@ class Dashboard extends Component {
               // callmeauto()
               videoinputid.value = "";
             } else if (window.innerWidth <= 800) {
-              video.style.width = "80vw";
+              // video.style.width = "80vw";
 
               // buttonme.style.display = "none";
               buttonmerec.style.display = "none";
@@ -1279,13 +1279,13 @@ class Dashboard extends Component {
         let buttonmerec = document.getElementById("buttonmerec" + userid);
         let video = document.getElementById(userid);
         if (window.innerWidth <= 800) {
-          video.style.width = "80vw";
+          // video.style.width = "80vw";
           document.getElementById("bigtvvideo").style.display = "none";
 
           // buttonme.style.display = "none";
           buttonmerec.style.display = "none";
 
-          divMeetingRoom.style.overflowY = "scroll";
+          // divMeetingRoom.style.overflowY = "scroll";
           divMeetingRoom.style.maxHeight = "85vh";
           divMeetingRoom.style.left = "5px";
         } else {
@@ -15902,7 +15902,7 @@ class Dashboard extends Component {
                       document.getElementById(userid).style.width = "80vw";
                       document.getElementById("bigtvvideo").style.display =
                         "none";
-                      divMeetingRoom.style.overflowY = "scroll";
+                      // divMeetingRoom.style.overflowY = "scroll";
                       divMeetingRoom.style.maxHeight = "85vh";
                       divMeetingRoom.style.left = "5px";
                     });
@@ -16499,7 +16499,7 @@ class Dashboard extends Component {
             myarray.forEach((userid) => {
               document.getElementById(userid).style.width = "80vw";
               // document.getElementById("bigtvvideo").style.display = "none";
-              divMeetingRoom.style.overflowY = "scroll";
+              // divMeetingRoom.style.overflowY = "scroll";
               divMeetingRoom.style.maxHeight = "85vh";
               divMeetingRoom.style.left = "5px";
             });

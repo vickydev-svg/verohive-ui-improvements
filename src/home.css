@@ -1,7 +1,49 @@
 /* * {
   font-size: 62.5%;
 } */
+.box_room_id {
+  width: 30%;
+  height: 100%;
+  font-size: 1rem;
+  color: white;
+}
+.box_date {
+  width: 30%;
+  height: 100%;
+  font-size: 1rem;
+  color: white;
+}
 
+.box_time {
+  width: 30%;
+  height: 100%;
+
+  font-size: 1rem;
+  color: white;
+}
+.box_common {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.blue_box {
+  background-color: #033a5a;
+  width: 100%;
+  height: 15%;
+  margin-top: 20px;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  box-shadow: 3px 9px 16px rgba(152, 149, 149, 0.4),
+    -3px -3px 10px rgba(255, 255, 255, 0.06),
+    inset 14px 14px 26px rgb(0, 0, 0, 0.3),
+    inset -3px -3px 15px rgba(206, 196, 196, 0.05);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .user_wrapper {
   width: 50%;
   height: 70vh;

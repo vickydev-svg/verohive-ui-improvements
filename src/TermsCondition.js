@@ -16,6 +16,7 @@ import copyrightlogo from "./imgs/CopyrightVERO.png";
 
 class TermsCondition extends Component {
   state = {
+    server_url: process.env.REACT_APP_SERVER_URL,
     username: "",
     id: "",
     privatekey: "",
@@ -42,7 +43,7 @@ class TermsCondition extends Component {
       id: this.props.location.state.username,
     });
 
-    fetch("/getuser", {
+    fetch(this.state.server_url + "/getuser", {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -480,9 +481,7 @@ class TermsCondition extends Component {
             {/* <button onClick={openMenu}>&#9776;</button> */}
           </div>
           <img src={logo} className="logo-vero"></img>
-          <h4 style={{ color: "white", marginRight: "45%" }}>
-          V4.1.1
-          </h4>
+          <h4 style={{ color: "white", marginRight: "45%" }}>V4.1.1</h4>
         </div>
 
         <aside className="sidebar">

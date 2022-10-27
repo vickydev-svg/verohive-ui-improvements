@@ -56,7 +56,7 @@ import Admin from "./components/Admin";
 import AdminUpdate from "./components/AdminUpdate";
 import AdminDashboard from "./components/AdminDashboard";
 import AdminSignUp from "./components/AdminRegister";
-
+import TermsCondition from "./components/Footer/Footer";
 import Dashboard from "./components/dashboard";
 //CSS Files
 // import "./css/ui.css";
@@ -67,7 +67,6 @@ import Logo from "./imgs/logo.png";
 import AdminRegister from "./components/AdminRegister";
 import Contact from "./profile/contact";
 import meetingScheduler from "./meetingScheduler";
-import TermsCondition from "./TermsCondition";
 
 import Messanger from "./messanger";
 import Miniapp from "./miniapp";
@@ -203,6 +202,7 @@ function App() {
             component={messangerLanding}
           />
         </>
+        <TermsCondition />
       </Router>
     </div>
   );

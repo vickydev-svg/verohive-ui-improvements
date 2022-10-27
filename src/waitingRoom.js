@@ -703,7 +703,7 @@ class WaitingRoom extends Component {
               style={{ color: "black", fontSize: "2.2rem", fontweight: "500" }}
             >
               <iframe
-                width="560"
+                width="100%"
                 height="315"
                 src="https://www.youtube.com/embed/9Auq9mYxFEE"
                 frameborder="0"
@@ -755,7 +755,7 @@ class WaitingRoom extends Component {
               style={{ color: "black", fontSize: "2.2rem", fontweight: "500" }}
             >
               <iframe
-                width="560"
+                width="100%"
                 height="315"
                 src="https://www.youtube.com/embed/XWq5kBlakcQ"
                 frameborder="0"
@@ -898,7 +898,7 @@ class WaitingRoom extends Component {
               style={{ color: "black", fontSize: "2.2rem", fontweight: "500" }}
             >
               <iframe
-                width="560"
+                width="100%"
                 height="315"
                 src="https://www.youtube.com/embed/adLGHcj_fmA"
                 frameborder="0"
@@ -989,6 +989,7 @@ class WaitingRoom extends Component {
                   onClick={() => {
                     this.handleClickOpenCnanews();
                   }}
+                  style={{ cursor: "pointer" }}
                 >
                   <img src={cnanews} className="news_buttons" />
                 </button>
@@ -998,6 +999,7 @@ class WaitingRoom extends Component {
                   onClick={() => {
                     this.handleClickOpenAljazeera();
                   }}
+                  style={{ cursor: "pointer" }}
                 >
                   <img src={aljazeera} className="news_buttons" />
                 </button>
@@ -1006,6 +1008,7 @@ class WaitingRoom extends Component {
                   onClick={() => {
                     this.handleClickOpenDwnews();
                   }}
+                  style={{ cursor: "pointer" }}
                 >
                   <img src={dwnews} className="news_buttons" />
                 </button>
@@ -1014,6 +1017,7 @@ class WaitingRoom extends Component {
                   onClick={() => {
                     this.handleClickOpenMusicVideo();
                   }}
+                  style={{ cursor: "pointer" }}
                 >
                   <img src={music} className="news_buttons" />
                 </button>
@@ -1269,7 +1273,7 @@ class WaitingRoom extends Component {
                 </span>
                 <h3>Breaking News</h3>
                 <iframe
-                  width="560"
+                  width="100%"
                   height="315"
                   src="https://www.youtube.com/embed/9Auq9mYxFEE"
                   frameborder="0"
@@ -1313,7 +1317,7 @@ class WaitingRoom extends Component {
                 </span>
                 <h3>Upcoming Movies</h3>
                 <iframe
-                  width="560"
+                  width="100%"
                   height="315"
                   src="https://www.youtube.com/embed/EHXqb-vACOQ"
                   frameborder="0"
@@ -1358,7 +1362,7 @@ class WaitingRoom extends Component {
                 </span>
                 <h3>Travel </h3>
                 <iframe
-                  width="560"
+                  width="100%"
                   height="315"
                   src="https://www.youtube.com/embed/fUhZxP9s8x0"
                   frameborder="0"

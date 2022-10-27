@@ -156,6 +156,10 @@
   .dashboard_network {
     width: 14%;
   }
+
+  .dash_video {
+    display: block !important;
+  }
 }
 @media only screen and (max-width: 600px) {
   #meetingRoomdiv {
@@ -191,9 +195,9 @@
     width: 350px;
   }
 
-  .hello_video {
+  /* .hello_video {
     width: 321px !important;
     max-width: 100vw !important;
     max-height: -1vh !important;
-  }
+  } */
 }

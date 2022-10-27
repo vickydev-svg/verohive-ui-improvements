@@ -9,6 +9,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
+import Home from "./Home";
 import FilledInput from "@mui/material/FilledInput";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
@@ -77,6 +78,7 @@ class Emailme extends React.Component {
     this.setState({
       id: this.props.location.state.username,
     });
+    //
     const getMycontacts = () => {
       let name = this.state.firstname + " " + this.state.lastname;
       let privateKey = this.state.privatekey.toString();
@@ -285,6 +287,21 @@ class Emailme extends React.Component {
     });
   };
 
+  handleCloseMeetingTime() {
+    this.setState({
+      meeting: false,
+    });
+    this.props.history.push("/private", {
+      username: this.state.id,
+    });
+  }
+
+  handleCloseMyMeeting() {
+    this.setState({
+      meeting: false,
+    });
+  }
+
   handleKeyDown = (e) => {
     if (["Enter", "Tab", "Spacebar", ","].includes(e.key)) {
       e.preventDefault();
@@ -346,7 +363,7 @@ class Emailme extends React.Component {
       rand4.toString() +
       rand5.toString();
     this.state.emails.forEach((email) => {
-      fetch("/nodemailer", {
+      fetch(this.state.server_url + "/nodemailer", {
         method: "post",
         headers: {
           "Content-Type": "application/json",
@@ -397,13 +414,13 @@ class Emailme extends React.Component {
         }),
       })
         .then(() => {
-          console.log("ddd");
+          console.log(this.state.date, this.state.time);
           //  this.verify()
           this.setState({
             invitationsentsuccessfully: "Invitation sent successfully",
             hostroomcode: rand,
           });
-          fetch("/nodemailer", {
+          fetch(this.state.server_url + "/nodemailer", {
             method: "post",
             headers: {
               "Content-Type": "application/json",
@@ -445,93 +462,6 @@ class Emailme extends React.Component {
         })
         .catch((err) => console.log(err));
     });
-
-    //calendar part
-
-    // var gapi = window.gapi
-    // /*
-    //   Update with your own Client Id and Api key
-    // */
-
-    // this.setState({
-    //     CLIENT_ID: '228713505587-vj1bfoj29vvs8ed2evmktoaq6moqeh44.apps.googleusercontent.com',
-    //     API_KEY: 'AIzaSyA54dSKqej3wSyVcvRt6J0kc16VPi8qrUo',
-    //     DISCOVERY_DOCS: ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"],
-    //     SCOPES: 'https://www.googleapis.com/auth/calendar.events'
-
-    // })
-    // gapi.load('client:auth2', () => {
-    //     console.log('loaded client')
-
-    //     gapi.client.init({
-    //         apiKey: this.state.API_KEY,
-    //         clientId: this.state.CLIENT_ID,
-    //         discoveryDocs: this.state.DISCOVERY_DOCS,
-    //         scope: this.state.SCOPES,
-    //     })
-
-    //     gapi.client.load('calendar', 'v3', () => console.log('bam!'))
-
-    //     gapi.auth2.getAuthInstance().signIn()
-    //         .then(() => {
-
-    //             var event = {
-    //                 'summary': this.state.titleValue,
-    //                 // 'location': '800 Howard St., San Francisco, CA 94103',
-    //                 'description': "The meeting Room Id is: "+ rand,
-    //                 'start': {
-    //                     'dateTime': this.state.date + 'T' + this.state.time + this.state.usersTimeZone,
-    //                     'timeZone': Intl.DateTimeFormat().resolvedOptions().timeZone
-    //                 },
-    //                 'end': {
-    //                     'dateTime': this.state.enddate + 'T' + this.state.endTime + this.state.usersTimeZone,
-    //                     'timeZone': Intl.DateTimeFormat().resolvedOptions().timeZone
-    //                 },
-    //                 // 'recurrence': [
-    //                 //     'RRULE:FREQ=DAILY;COUNT=2'
-    //                 // ],
-    //                 'attendees': [
-    //                     { 'email': this.state.emails }
-    //                 ],
-    //                 'reminders': {
-    //                     'useDefault': false,
-    //                     'overrides': [
-    //                         { 'method': 'email', 'minutes': 24 * 60 },
-    //                         { 'method': 'popup', 'minutes': 10 }
-    //                     ]
-    //                 }
-    //             }
-
-    //             var request = gapi.client.calendar.events.insert({
-    //                 'calendarId': 'primary',
-    //                 'resource': event,
-    //                 'sendNotifications': true,
-    //             })
-
-    //             request.execute(event => {
-    //                 console.log(event)
-    //                 window.open(event.htmlLink)
-    //             })
-
-    //             /*
-    //                 Uncomment the following block to get events
-    //             */
-
-    //             // get events
-    //             gapi.client.calendar.events.list({
-    //                 'calendarId': 'primary',
-    //                 'timeMin': (new Date()).toISOString(),
-    //                 'showDeleted': false,
-    //                 'singleEvents': true,
-    //                 'maxResults': 10,
-    //                 'orderBy': 'startTime'
-    //             }).then(response => {
-    //                 const events = response.result.items
-    //                 console.log('EVENTS: ', events)
-    //             })
-
-    //         })
-    // })
   }
 
   render() {
@@ -560,6 +490,85 @@ class Emailme extends React.Component {
     );
     return (
       <div>
+        {/* <Home /> */}
+        {/* my meeting popup */}
+        <Dialog
+          className="dialog"
+          open={this.state.contactPop}
+          onClose={() => {
+            this.handleCloseContactPop();
+          }}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle
+            id="alert-dialog-title"
+            style={{
+              textAlign: "center",
+              fontSize: "3rem",
+              color: "#204C6D",
+              borderBottom: "2px solid #204C6D",
+            }}
+          >
+            CONTACT
+          </DialogTitle>
+          <DialogContent className="dialog_content">
+            <DialogContentText
+              id="alert-dialog-description"
+              className="dialog_content_text"
+            >
+              <div className="email_contact">
+                <TextField
+                  id="standard-basic"
+                  label="Email"
+                  variant="standard"
+                  name="email"
+                  InputProps={{
+                    style: {
+                      fontSize: 15,
+                      fontWeight: 500,
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      width: "80%",
+                      margin: "20px 0px 0px 10px",
+                    },
+                  }}
+                  InputLabelProps={{
+                    style: { fontSize: 20, margin: "0 0 0 10px" },
+                  }}
+                  // onChange={handleChange}
+                />
+
+                <Button
+                  className="contact_button"
+                  variant="contained"
+                  endIcon={<SendIcon />}
+                >
+                  Contact
+                </Button>
+              </div>
+
+              <div className="loader">
+                <Stack sx={{ color: "grey.500" }} spacing={2} direction="row">
+                  <CircularProgress color="success" />
+                </Stack>
+              </div>
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              variant="contained"
+              disableElevation
+              onClick={() => {
+                this.handleCloseContactPop();
+              }}
+            >
+              CLOSE
+            </Button>
+          </DialogActions>
+        </Dialog>
+        {/* my meeting popup ends */}
         <div className="header">
           {/* <div className="brand">
             <button onClick={openMenu}>&#9776;</button>
@@ -641,9 +650,9 @@ class Emailme extends React.Component {
           <Dialog
             className="metting_dialog dialog"
             open={this.state.meeting}
-            // onClose={() => {
-            //   this.handleCloseMeetingTime();
-            // }}
+            onClose={() => {
+              this.handleCloseMeetingTime();
+            }}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
           >
@@ -937,6 +946,18 @@ class Emailme extends React.Component {
                   >
                     Schedule Meeting
                   </Button>
+
+                  <Button
+                    className="email_metting_button"
+                    variant="contained"
+                    startIcon={<ScheduleIcon />}
+                    onClick={() => {
+                      this.handleClick();
+                    }}
+                    style={{ marginLeft: "10px" }}
+                  >
+                    Meetings List
+                  </Button>
                   <div style={{ display: "none" }}>
                     <input
                       className="input"
@@ -955,9 +976,9 @@ class Emailme extends React.Component {
               <Button
                 variant="contained"
                 startIcon={<CloseIcon />}
-                // onClick={() => {
-                //   this.handleCloseMeetingTime();
-                // }}
+                onClick={() => {
+                  this.handleCloseMeetingTime();
+                }}
               >
                 CLOSE
               </Button>
