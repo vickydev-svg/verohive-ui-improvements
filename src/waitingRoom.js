@@ -197,6 +197,7 @@ class WaitingRoom extends Component {
     });
 
     // handlers functions
+    // hiiii
     function receiveVideo(userid, username) {}
 
     async function onExistingParticipants(userid, existingUsers) {
