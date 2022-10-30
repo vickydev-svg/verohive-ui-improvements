@@ -108,7 +108,7 @@ class TermsCondition extends Component {
               borderBottom: "2px solid #204C6D",
             }}
           >
-            Vero Hive Privacy Policy
+            VeroHive Privacy Policy
           </DialogTitle>
           <DialogContent className="dialog_content">
             <DialogContentText
@@ -578,14 +578,15 @@ class TermsCondition extends Component {
               borderBottom: "2px solid #204C6D",
             }}
           >
-            VEROHIVE TERMS OF SERVICE
+            VeroHive TERMS OF SERVICE
           </DialogTitle>
           <DialogContent className="dialog_content">
             <DialogContentText
               id="alert-dialog-description"
               className="dialog_content_text"
+              style={{ fontSize: "2rem" }}
             >
-              <h2 style={{ fontSize: "1rem" }}>
+              <h2>
                 IMPORTANT NOTICE: THESE TERMS AND CONDITIONS CONTAIN A BINDING
                 ARBITRATION PROVISION AND WAIVER OF JURY TRIALS AND CLASS
                 ACTIONS GOVERNING DISPUTES ARISING FROM USE OF THE VEROHIVE
@@ -594,9 +595,8 @@ class TermsCondition extends Component {
                 PLEASE READ CAREFULLY.
               </h2>
               <br />
-              <br />
-              <br />
-              <p style={{ fontSize: "1rem" }}>
+
+              <p>
                 These VEROHIVE Services Terms and Conditions (“Terms”) govern
                 access to and use of the VEROHIVE (“VEROHIVE,” “we” or “us”) web
                 sites, applications and services (collectively, the “Site”) by
@@ -2055,7 +2055,7 @@ class TermsCondition extends Component {
         </Dialog>
         <div className="footer">
           <span style={{ fontSize: "1rem" }}>
-            &copy; Megahoot. All Rights Reserved
+            &copy; MegaHoot. All Rights Reserved
           </span>
           <button
             onClick={() => this.handleClickOpenPrivacyPolicy()}

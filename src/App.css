@@ -48,9 +48,9 @@
 }
 
 body {
-  /* background: url("https://www.verohive.net/static/media/01.6d5e6c68.jpg"); */
+  background: url("https://www.verohive.net/static/media/01.6d5e6c68.jpg");
   /* background-color: #272727; */
-  background-color: #033a5a;
+  /* background-color: #033a5a; */
   background-size: cover;
   background-attachment: fixed;
   font-family: Verdana, Geneva, Tahoma, sans-serif;

@@ -18224,9 +18224,13 @@ class Dashboard extends Component {
               style={{ color: "black", fontSize: "2.2rem", fontweight: "500" }}
             >
               {this.state.waiters.map((waiter) => (
-                <div key={waiter.id}>
-                  {waiter.name}
-                  <button type="button" onClick={() => this.youcancome(waiter)}>
+                <div key={waiter.id} className="waiting_div">
+                  <span style={{ color: "white" }}>{waiter.name}</span>
+                  <button
+                    type="button"
+                    onClick={() => this.youcancome(waiter)}
+                    className="dash_button"
+                  >
                     ALLOW IN
                   </button>
                   <button
@@ -18239,6 +18243,7 @@ class Dashboard extends Component {
                         ),
                       });
                     }}
+                    className="dash_button"
                   >
                     Reject
                   </button>
@@ -21565,11 +21570,10 @@ class Dashboard extends Component {
                   <input
                     name="image"
                     type="file"
-                    style={{ width: "88px" }}
+                    style={{ width: "88px", fontSize: "1rem" }}
                     onChange={(e) => {
                       this.setState({ image: e.currentTarget.files[0] });
                     }}
-                    style={{ fontSize: "1rem" }}
                   />
 
                   <button
@@ -22856,8 +22860,9 @@ class Dashboard extends Component {
                             marginTop: "7px",
                             cursor: "pointer",
                           }}
+                          // HII VICKY
                           onClick={() => {
-                            this.infoattendeejoin();
+                            this.handleClickOpen1();
                           }}
                         ></img>
                       </li>

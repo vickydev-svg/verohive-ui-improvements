@@ -1,6 +1,14 @@
 /* * {
   font-size: 62.5%;
 } */
+
+* {
+  font-family: "Fira Sans", sans-serif;
+  font: 1.6rem Helvetica;
+}
+.home_back {
+  /* background-image: url(../src/components/Images/Final\ image\ 2.svg); */
+}
 .box_room_id {
   width: 30%;
   height: 100%;
@@ -25,6 +33,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.common2 {
+  font-size: 1.5rem !important;
+  background-color: #033a5a !important;
+  color: #2e80af;
 }
 .blue_box {
   background-color: #033a5a;
@@ -68,7 +81,7 @@
 }
 
 .common_content {
-  font-size: 1rem;
+  font-size: 1.6rem;
   color: white;
 }
 .name {
@@ -79,7 +92,7 @@
   height: 35%;
   /*background-color: #f5f5f5;
     */
-  padding: 5rem 0 0 2rem;
+  padding: 3rem 0 0 2rem;
   color: white;
   /* border-bottom: 5px solid rgb(239, 255, 29); */
   /* background: linear-gradient(
@@ -101,9 +114,17 @@
   font-size: 0.8rem;
   display: flex;
   justify-content: space-between;
+  font-family: "Fira Sans", sans-serif;
+  font: 1.6rem Helvetica;
+}
+
+.dashboard_info {
+  width: 62%;
 }
 .dashboard_video {
   /* margin: 5rem 0 0 2rem; */
+  height: 101%;
+  width: 26%;
   margin: 0rem 2rem 0rem 0rem;
 }
 .dashboard_user_social_media_info {
@@ -127,6 +148,9 @@
   -moz-border-radius: 0px 0px 10px 10px;
   -ms-border-radius: 0px 0px 10px 10px;
   -o-border-radius: 0px 0px 10px 10px;
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
 }
 
 .option {
@@ -173,7 +197,7 @@
 }
 .room_name {
   width: 20%;
-  font-size: 1rem;
+  font-size: 1.6rem;
   color: white;
 }
 .dashboard_button {
@@ -209,7 +233,26 @@
   justify-content: space-between;
   flex-direction: column;
 }
+.profile_pic_dash {
+  width: 101px;
+  height: 101px;
+}
+.image_info {
+  width: 60%;
+  display: flex;
+  justify-content: space-between;
+}
 
+.dash_camera {
+  width: 125%;
+  position: relative;
+  right: 37%;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
 .read_only {
   display: flex;
   justify-content: space-between;

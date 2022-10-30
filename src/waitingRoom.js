@@ -135,7 +135,7 @@ class WaitingRoom extends Component {
     //     e.preventDefault();
     // });
 
-    var camMode = this.props.location.state.camMode;
+    var camMode = this.props?.location?.state?.camMode;
 
     var divRoomSelection = document.getElementById("roomSelection");
     // var divMeetingRoom = document.getElementById('meetingRoom');
@@ -199,16 +199,16 @@ class WaitingRoom extends Component {
     // handlers functions
     function receiveVideo(userid, username) {}
 
-    function onExistingParticipants(userid, existingUsers) {
-      var video = document.getElementById("checkCam");
+    async function onExistingParticipants(userid, existingUsers) {
+      var video = await document.getElementById("checkCam");
       video.poster =
         "https://mhiservers.com/uO0muCuiv37bWZ0iiaPfsWUheuH6tGSgAssets/aB17BMXtfrcywe6Jh0RUMcN4dARoM6kyimages/WKjKIwwT%7Dj;tTcp4&tG9*eNC]gIElbsystem/VeroMain_placeholder.jpg";
 
       video.id = userid;
 
-      // video.style.width = "150px"
-      // var myheight = (video.style.width / 16) * 9
-      // video.style.height = myheight
+      video.style.width = "150px";
+      var myheight = (video.style.width / 16) * 9;
+      video.style.height = myheight;
       video.autoplay = true;
       video.controls = true;
 
@@ -370,29 +370,29 @@ class WaitingRoom extends Component {
       }
     };
 
-    function mobileview() {
-      if (window.innerWidth <= 800) {
-        let video = document.getElementById("receptionvideo");
-        let videocamcheck = document.getElementById("checkCam");
+    // function mobileview() {
+    //   if (window.innerWidth <= 800) {
+    //     let video = document.getElementById("receptionvideo");
+    //     let videocamcheck = document.getElementById("checkCam");
 
-        // video.style.width = "88vw";
-        // video.style.marginTop = "0";
-        // video.style.position = "absolute";
-        // video.style.top = "15vh";
+    //     video.style.width = "88vw";
+    //     video.style.marginTop = "0";
+    //     video.style.position = "absolute";
+    //     video.style.top = "15vh";
 
-        // video.style.marginLeft = "0";
+    //     video.style.marginLeft = "0";
 
-        // videocamcheck.style.width = "88vw";
-        // videocamcheck.style.marginTop = "210";
-        // videocamcheck.style.position = "absolute";
-        // videocamcheck.style.top = "44vh";
+    //     videocamcheck.style.width = "88vw";
+    //     videocamcheck.style.marginTop = "210";
+    //     videocamcheck.style.position = "absolute";
+    //     videocamcheck.style.top = "44vh";
 
-        // videocamcheck.style.marginLeft = "0";
+    //     videocamcheck.style.marginLeft = "0";
 
-        document.getElementById("bottomcontrolsid").style.top = "80vh";
-      }
-    }
-    mobileview();
+    //     document.getElementById("bottomcontrolsid").style.top = "80vh";
+    //   }
+    // }
+    // mobileview();
 
     if (this.props.location.state != undefined) {
       this.setState({

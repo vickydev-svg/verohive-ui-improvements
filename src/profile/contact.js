@@ -177,6 +177,9 @@ class Contact extends Component {
     this.setState({
       contactPage: false,
     });
+    this.props.history.push("/private", {
+      username: this.state.id,
+    });
   };
   addEmailHandler = () => {
     const Cemail = this.state.Cemail;
@@ -684,16 +687,6 @@ class Contact extends Component {
 
     return (
       <div className="home-main">
-        <div className="header">
-          {/* <div className="brand">
-            <button onClick={openMenu}>&#9776;</button>
-          </div> */}
-          <img src={logo} className="logo-vero"></img>
-          <h4 style={{ color: "white", marginRight: "45%" }}>V4.1.1</h4>
-        </div>
-        {/*  */}
-        {/*  */}
-
         <Dialog
           className="dialog"
           open={this.state.contactPage}
@@ -770,20 +763,27 @@ class Contact extends Component {
                         display: "flex",
                         flexDirection: "row",
                         alignItems: "center",
-                        maxWidth: "300px",
+                        // maxWidth: "300px",
                         maxHeight: "50px",
                         padding: "10px",
                         margin: "10px",
                         color: "black",
-                        backgroundColor: "#ffffffd4",
+                        backgroundColor: "#033a5a",
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "space-around",
+                        border: "1px solid #2e2e4c",
+                        boxShadow:
+                          "3px 9px 16px rgba(152, .149, .149, 0.4) ,-3px -3px 10px rgba(255, .255, .255, 0.06),inset 14px 14px 26px rgb(0, .0, .0, 0.3),inset -3px -3px 15px rgba(206, .196, .196, 0.05)",
+                        borderRadius: "10px",
                       }}
                     >
                       {user.profileImage ? (
                         <img
                           src={user.profileImage}
                           style={{
-                            width: "60px",
-                            height: "60px",
+                            width: "50px",
+                            height: "50px",
                             marginRight: "15px",
                             borderRadius: "50px",
                           }}
@@ -792,9 +792,9 @@ class Contact extends Component {
                         <p
                           style={{
                             fontSize: "30px",
-                            width: "60px",
+                            width: "50px",
                             textAlign: "center",
-                            height: "60px",
+                            height: "50px",
                             marginRight: "15px",
                             borderRadius: "50px",
                             backgroundColor: "white",
@@ -834,24 +834,17 @@ class Contact extends Component {
                     </div>
                   ))
                 ) : (
-                  <div className="lds-roller">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
+                  <div className="loader">
+                    <Stack
+                      sx={{ color: "grey.500" }}
+                      spacing={2}
+                      direction="row"
+                    >
+                      <CircularProgress color="success" />
+                    </Stack>
                   </div>
                 )}
                 <br></br>
-              </div>
-
-              <div className="loader">
-                <Stack sx={{ color: "grey.500" }} spacing={2} direction="row">
-                  <CircularProgress color="success" />
-                </Stack>
               </div>
             </DialogContentText>
           </DialogContent>

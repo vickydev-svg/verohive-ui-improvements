@@ -4,6 +4,7 @@ import GoogleIcon from "@mui/icons-material/Google";
 import AppleIcon from "@mui/icons-material/Apple";
 import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
 import TermsCondition from "./Footer/Footer";
+import VeroImage from "./Images/VERO HIVE 3.png";
 import ScheduleIcon from "@mui/icons-material/Schedule";
 // import Sidebar from "./components/Sidebar/Sidebar";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -278,7 +279,7 @@ class Login extends Component {
   };
   render() {
     return (
-      <>
+      <div className="login_back">
         {/*  */}
         {/*  */}
         {/* PRIVACY POLICY DIALOG BOX */}
@@ -616,16 +617,14 @@ class Login extends Component {
           {/*  */}
 
           <div className="image-box">
-            <img
+            {/* <img
               src={"https://www.verohive.net/static/media/welcome.74ac3555.jpg"}
               alt="verohive"
             />
             <div className="content_buttons">
               <ul className="content_buttons_list">
                 <li className="button_item btn_new">
-                  {/* <a href="#" className="button_item_list">
-                VeroHive Main
-              </a> */}
+               
 
                   <AlertDialogSlide
                     title="VEROHIVE MAIN"
@@ -658,7 +657,17 @@ Premium and Executive Members that have guest speakers at their events can eithe
                   />
                 </li>
               </ul>
-            </div>
+            </div> */}
+            <img
+              src={VeroImage}
+              alt="hiiii"
+              style={{
+                width: "80%",
+                height: "100%",
+                borderRadius: "3rem",
+                backgroundSize: "fit",
+              }}
+            />
           </div>
           <div className="form-box">
             <span className="signup-link">
@@ -765,7 +774,7 @@ Premium and Executive Members that have guest speakers at their events can eithe
           </div>
         </div>
         {/* <TermsCondition /> */}
-      </>
+      </div>
     );
   }
 }

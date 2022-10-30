@@ -1412,47 +1412,39 @@ class Home extends Component {
   //     })
   //     .catch(err => console.log(err))
   // }
-  // Upload1_To_AWS_S3 = () => {
-  //   var that = this;
-  //   const { email } = this.state;
-  //   // console.log("Dddd", this.state.image)
-  //   let formData = new FormData();
-  //   formData.append("photo", this.state.image);
-  //   try {
-  //     const res = Api.uploadImageToAwsS3(formData)
-  //     res.then(function (value) {
-  //       // console.log(value); // "Success"
-  //       // that.setState({
-  //       //   image: value
-  //       // })
-  //       fetch("/updateProfilePic", {
-  //         method: "post",
-  //         headers: {
-  //           "Content-Type": "application/json"
-  //         },
-  //         body: JSON.stringify({
-  //           email,
-  //           value
-
-  //         })
-  //       })
-
-  //         .then(() => {
-
-  //           alert("profile pic changed successfully")
-  //           that.setState({
-  //             image1: value
-  //           })
-
-  //         })
-  //         .catch(err => console.log(err))
-  //     })
-
-  //   } catch (e) {
-
-  //   }
-
-  // }
+  Upload1_To_AWS_S3 = () => {
+    var that = this;
+    const { email } = this.state;
+    console.log("Dddd", this.state.image);
+    let formData = new FormData();
+    formData.append("photo", this.state.image);
+    try {
+      const res = Api.uploadImageToAwsS3(formData);
+      res.then(function (value) {
+        // console.log(value); // "Success"
+        // that.setState({
+        //   image: value
+        // })
+        fetch(this.state.server_url + "/updateProfilePic", {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            value,
+          }),
+        })
+          .then(() => {
+            alert("profile pic changed successfully");
+            that.setState({
+              image1: value,
+            });
+          })
+          .catch((err) => console.log(err));
+      });
+    } catch (e) {}
+  };
 
   // async onSubmit(e) {
   //   e.preventDefault();
@@ -1495,6 +1487,9 @@ class Home extends Component {
   handleCloseContactPop = () => {
     this.setState({
       contactPop: false,
+    });
+    this.props.history.push("/", {
+      username: this.state.id,
     });
   };
   handleClickOpenMyMeetings = () => {
@@ -1561,7 +1556,7 @@ class Home extends Component {
     });
 
     return (
-      <>
+      <div className="home_back">
         <ToastContainer style={{ zIndex: "100000000000", fontSize: "4rem" }} />
         {this.state.invitationsentsuccessfully != "" ? (
           <div
@@ -1667,10 +1662,16 @@ class Home extends Component {
                   alignItems: "center",
                   width: "80%",
                   margin: "20px 0px 0px 10px",
+                  backgroundColor: "white",
+                  borderBottom: "1px solid white",
                 },
               }}
               InputLabelProps={{
-                style: { fontSize: 20, margin: "0 0 0 10px" },
+                style: {
+                  fontSize: 30,
+                  margin: "0 0 0 10px",
+                  backgroundColor: "white",
+                },
               }}
               onChange={(event) => {
                 this.inputHandler(event);
@@ -1786,9 +1787,10 @@ class Home extends Component {
                             padding: "10px",
                             margin: "10px",
                             color: "black",
-                            backgroundColor: "#D5D0D0",
+                            backgroundColor: "#033a5a",
                             cursor: "pointer",
                             borderRadius: "5px",
+                            // hii
                           }}
                           onClick={() => {
                             const privateKey = user.veroKey;
@@ -1995,17 +1997,6 @@ class Home extends Component {
                   Schedule Meeting
                 </Button>
 
-                <Button
-                  className="email_metting_button"
-                  variant="contained"
-                  startIcon={<ScheduleIcon />}
-                  onClick={() => {
-                    this.handleClick();
-                  }}
-                  style={{ marginLeft: "10px" }}
-                >
-                  Meetings List
-                </Button>
                 <div style={{ display: "none" }}>
                   <input
                     className="input"
@@ -2185,6 +2176,52 @@ class Home extends Component {
                   this.onSubmit(e);
                 }}
               >
+                <div>
+                  {this.state.image1 ? (
+                    <img
+                      src={this.state.image1}
+                      style={{ width: "100px", height: "90px" }}
+                    />
+                  ) : (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <input
+                        name="image"
+                        type="file"
+                        onChange={(e) => {
+                          this.setState({ image: e.currentTarget.files[0] });
+                        }}
+                        style={{ fontSize: "1rem" }}
+                      />
+                      <button
+                        className="btn btn-sendfile"
+                        style={{ backgroundColor: "red" }}
+                        onClick={() => this.Upload1_To_AWS_S3()}
+                      >
+                        Upload Pic
+                      </button>
+                    </div>
+                  )}
+                  {this.state.image1 ? (
+                    <button
+                      className="btn btn-sendfile"
+                      style={{ backgroundColor: "red" }}
+                      onClick={() =>
+                        this.setState({
+                          image1: null,
+                        })
+                      }
+                    >
+                      Change
+                    </button>
+                  ) : null}
+                </div>
+
                 <div
                   className="update_form_left_part"
                   style={{
@@ -2767,20 +2804,30 @@ class Home extends Component {
         >
           <div className="user_upperpart">
             <div className="user_photo_logout">
-              <div className="user_photo">
-                {this.state.image1 ? (
-                  <img
-                    alt=""
-                    style={{
-                      height: "80px",
-                      width: "80px",
-                      borderRadius: "50%",
-                    }}
-                  />
-                ) : (
-                  <div></div>
-                )}
-              </div>
+              {/* <div className="user_photo"> */}
+              {this.state.image1 ? (
+                <img
+                  src={this.state.image1}
+                  alt=""
+                  style={{
+                    height: "80px",
+                    width: "80px",
+                    borderRadius: "50%",
+                    marginTop: "10px",
+                  }}
+                />
+              ) : (
+                <></>
+              )}
+              {/* <img
+                  src="https://media.istockphoto.com/vectors/user-icon-flat-isolated-on-white-background-user-symbol-vector-vector-id1300845620?k=20&m=1300845620&s=612x612&w=0&h=f4XTZDAv7NPuZbG0habSpU0sNgECM0X7nbKzTUta3n8="
+                  style={{
+                    height: "80px",
+                    width: "80px",
+                    borderRadius: "50%",
+                  }}
+                /> */}
+              {/* </div> */}
               {/* <p className="welcome">Welcome {JSON.parse(auth).userName}</p> */}
               <p style={{ color: "white", fontSize: "1rem" }}>
                 Welcome {this.state.id}
@@ -2794,27 +2841,6 @@ class Home extends Component {
                 </button>
               </div>
             </div>
-            <div
-              className="share_button"
-              onDoubleClick={() =>
-                this.setState({
-                  show: false,
-                })
-              }
-              onClick={() => {
-                this.setState({
-                  show: true,
-                });
-              }}
-            >
-              <FaShareAlt
-                style={{
-                  fontSize: "3rem",
-                  color: " #2e80af",
-                  marginRight: "5px",
-                }}
-              />
-            </div>
           </div>
 
           <div className="user_lower_part">
@@ -2822,8 +2848,8 @@ class Home extends Component {
               <li className="user_lower_part_list_items">
                 <a href="#" className="user_lower_part_list_items_links">
                   <MdDashboard
-                    className="common"
-                    style={{ color: " #fe6a68" }}
+                    className="common2"
+                    // style={{ color: " #fe6a68" }}
                   />
                   <span className="user_links">Dashboard</span>
                 </a>
@@ -2838,10 +2864,7 @@ class Home extends Component {
                     this.handleClickOpenUpdatePop();
                   }}
                 >
-                  <MdTipsAndUpdates
-                    className="common"
-                    style={{ color: " #fe6a68" }}
-                  />
+                  <MdTipsAndUpdates className="common2" />
                   <span className="user_links">Update Profile</span>
                 </a>
               </li>
@@ -2850,18 +2873,18 @@ class Home extends Component {
                 <a
                   href="#"
                   className="user_lower_part_list_items_links"
-                  onClick={() => {
-                    this.publicProfile();
-                  }}
+                  // onClick={() => {
+                  //   this.publicProfile();
+                  // }}
                 >
-                  <CgProfile className="common" />
+                  <CgProfile className="common2" />
                   <span className="user_links">Public Profile</span>
                 </a>
               </li>
 
               <li className="user_lower_part_list_items">
                 <a href="#" className="user_lower_part_list_items_links">
-                  <MdPersonalVideo className="common" />
+                  <MdPersonalVideo className="common2" />
                   <span className="user_links">Background</span>
                 </a>
               </li>
@@ -2873,7 +2896,7 @@ class Home extends Component {
                   // onClick={() => this.handleClickOpenChatPop()}
                   onClick={() => this.contact()}
                 >
-                  <MdOutlineContactPhone className="common" />
+                  <MdOutlineContactPhone className="common2" />
                   <span className="user_links">Contacts</span>
                 </a>
               </li>
@@ -2885,10 +2908,7 @@ class Home extends Component {
                   onClick={() => this.handleClickOpenMyMeetings()}
                   // onClick={() => this.contact()}
                 >
-                  <ScheduleIcon
-                    className="common"
-                    style={{ fontSize: "3rem" }}
-                  />
+                  <ScheduleIcon className="common2" />
                   <span className="user_links">My Meetings</span>
                 </a>
               </li>
@@ -2902,7 +2922,7 @@ class Home extends Component {
                     this.handleClickOpenMeetingTime();
                   }}
                 >
-                  <MdMeetingRoom className="common" />
+                  <MdMeetingRoom className="common2" />
                   <span className="user_links">Schedule Meeting</span>
                 </a>
               </li>
@@ -2913,7 +2933,7 @@ class Home extends Component {
                   className="user_lower_part_list_items_links"
                   target="_blank"
                 >
-                  <MdCardMembership className="common" />
+                  <MdCardMembership className="common2" />
                   <span className="user_links">Upgrade Membership</span>
                 </a>
               </li>
@@ -3147,38 +3167,57 @@ class Home extends Component {
           {/*  */}
           {/*  */}
           <div className="dashboard_user_info">
-            <div className="dashboard_info">
-              {/* <h1 className="name">{JSON.parse(auth).userName}</h1> */}
+            <div className="image_info">
+              {this.state.image1 ? (
+                <img
+                  src={this.state.image1}
+                  style={{
+                    // width: "50px",
+                    // height: "50px",
+                    borderRadius: "50%",
+                    marginRight: "10px",
+                  }}
+                  className="profile_pic_dash"
+                />
+              ) : (
+                <></>
+              )}
 
-              <p className="username common_content">
-                {/* {JSON.parse(auth).firstName} */}
-                Username: &nbsp;&nbsp;{this.state.id}
-              </p>
-              <br />
-              <p className="veronumber common_content">
-                VERO Number: {this.state.privatekey}
-              </p>
-              <br />
-              <p className="organisation common_content">
-                Organization: {this.state.organization}
-              </p>
-              <br />
-              <p className="country common_content">
-                Country: {this.state.country}
-              </p>
-              <br />
-              <p className="city common_content">City: {this.state.city}</p>
-              <br />
+              <div className="dashboard_info">
+                {/* <h1 className="name">{JSON.parse(auth).userName}</h1> */}
+
+                <p className="username common_content">
+                  {/* {JSON.parse(auth).firstName} */}
+                  Username: &nbsp;&nbsp;{this.state.id}
+                </p>
+                <br />
+                <p className="veronumber common_content">
+                  VERO Number: {this.state.privatekey}
+                </p>
+                <br />
+                <p className="organisation common_content">
+                  Organization: {this.state.organization}
+                </p>
+                <br />
+                <p className="country common_content">
+                  Country: {this.state.country}
+                </p>
+                <br />
+                <p className="city common_content">City: {this.state.city}</p>
+                <br />
+              </div>
             </div>
 
             <div className="dashboard_video">
               <video
-                style={{
-                  width: "200px",
-                  marginLeft: "auto",
-                  borderRadius: "10px",
-                  maxHeight: "200px",
-                }}
+                // style={{
+                //   // width: "200px",
+                //   width: "134px",
+                //   marginLeft: "auto",
+                //   borderRadius: "10px",
+                //   maxHeight: "200px",
+                // }}
+                className="dash_camera"
                 id="checkCam"
                 ref={this.videoEle}
                 poster="https://mhiservers.com/uO0muCuiv37bWZ0iiaPfsWUheuH6tGSgAssets/aB17BMXtfrcywe6Jh0RUMcN4dARoM6kyimages/WKjKIwwT%7Dj;tTcp4&tG9*eNC]gIElbsystem/VeroMain_placeholder.jpg"
@@ -3388,7 +3427,7 @@ class Home extends Component {
           />
         ) : null} */}
         </div>
-      </>
+      </div>
     );
   }
 }

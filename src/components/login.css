@@ -3,7 +3,9 @@
   box-sizing: border-box;
 }
 /*------------------ BASIC-DEFAULTS--------- */
-
+.login_back {
+  /* background-image: url(./Images/Final\ image.svg); */
+}
 .login-wrapper {
   padding: 1rem;
   overflow: hidden;
@@ -34,6 +36,10 @@
   -ms-transform: scale(0.9);
   -o-transform: scale(0.9);
   height: 90vh;
+  /* background-image: url(./Images/Final\ image\ 2.svg); */
+  opacity: 50%;
+  font-family: "Fira Sans", sans-serif;
+  font: 1.6rem Helvetica;
 }
 .register {
   color: #0e4f77 !important;
